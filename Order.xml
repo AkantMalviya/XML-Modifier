@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>Ariel360</Library>
+<Group>OPF</Group>
+<Name>1033_xml</Name>
+<StyleName></StyleName>
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v15</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>
+<Ariel360>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>Ariel360</Library>
+<Group>OPF</Group>
+<Name>1033_xxxx</Name>
+<StyleName />
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v15</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>
+<Ariel360>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>Ariel360</Library>
+<Group>OPF</Group>
+<Name>1033_xxx</Name>
+<StyleName />
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v15</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>
+<Ariel360>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>Ariel360</Library>
+<Group>OPF</Group>
+<Name>1033_xxx</Name>
+<StyleName />
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v15</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>
+<Ariel360>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>Ariel360</Library>
+<Group>OPF</Group>
+<Name>1023_xxxx</Name>
+<StyleName />
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v15</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>
+<Ariel360>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>Ariel360</Library>
+<Group>OPF</Group>
+<Name>324wfd</Name>
+<StyleName />
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v15</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>
+<Ariel360>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>Ariel360</Library>
+<Group>OPF</Group>
+<Name>1033_xxx</Name>
+<StyleName />
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v15</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>
+<Ariel360>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>Ariel360</Library>
+<Group>OPF</Group>
+<Name>1033_xxxx</Name>
+<StyleName />
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v15</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>
+<Ariel360>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>Ariel360</Library>
+<Group>OPF</Group>
+<Name>1033_IMRF_Prelimret_Master</Name>
+<StyleName />
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v15</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>
+<Ariel360>
+<ORDERFILE>
+    <CUSTOMER>
+        <NAME>
+            <LAST-NAME>Smith</LAST-NAME>
+            <FIRST-NAME>Sam</FIRST-NAME>
+        </NAME>
+        <DATE>October 15, 2001</DATE>
+        <ORDERS>
+            <ITEM>
+                <PRODUCT>Tomatoes</PRODUCT>
+                <NUMBER>8</NUMBER>
+                <PRICE>1.25</PRICE>
+            </ITEM>
+            <ITEM>
+        <PRODUCT>Apples</PRODUCT>
+                <NUMBER>12</NUMBER>
+                <PRICE>2.50</PRICE>
+            </ITEM>
+            <ITEM>
+        <PRODUCT>Bananas</PRODUCT>
+                <NUMBER>6</NUMBER>
+                <PRICE>.50</PRICE>
+            </ITEM>
+        </ORDERS>
+    </CUSTOMER>
+    <CUSTOMER>
+        <NAME>
+            <LAST-NAME>Snead</LAST-NAME>
+            <FIRST-NAME>Todd</FIRST-NAME>
+        </NAME>
+        <DATE>October 17, 2001</DATE>
+        <ORDERS>
+            <ITEM>
+                <PRODUCT>Slicer/Dicer</PRODUCT>
+                <NUMBER>1</NUMBER>
+                <CHARGEACCT>1234-5678-3456-7890</CHARGEACCT>
+            </ITEM>
+        </ORDERS>
+    </CUSTOMER>
+</ORDERFILE>
+</Ariel360>
+</Systems>
+</DocumentData>
+</Ariel360>
+</Systems>
+</DocumentData>
+</Ariel360>
+</Systems>
+</DocumentData>
+</Ariel360>
+</Systems>
+</DocumentData>
+</Ariel360>
+</Systems>
+</DocumentData>
+</Ariel360>
+</Systems>
+</DocumentData>
+</Ariel360>
+</Systems>
+</DocumentData>
+</Ariel360>
+</Systems>
+</DocumentData>
+</Ariel360>
+</Systems>
+</DocumentData>
