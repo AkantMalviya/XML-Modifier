@@ -1,3 +1,5 @@
+import os
+import webbrowser
 import tkinter
 from tkinter import ttk, messagebox
 
@@ -36,10 +38,13 @@ def example():
 
 
 def submitFunction():
-    print(e2.selection_get())
+    # webbrowser.open('http://example.com')
+    with open(f'{os.getcwd()}\\xmls\\{FileNameStr.get()}.xml', "wb") as f:
+        content = f.read()
+    print(content)
     if Clientstr.get() != "":
         if FileNameStr.get() != "":
-                status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get()}>")
+            status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get()}>")
 
     FileNameStr.set("")
     Clientstr.set("")
@@ -55,27 +60,29 @@ def do_popup(event):
 
 def cut_text():
     global selected
-    if e2.selection_get():
+    if e2.select_present():
         selected = e2.selection_get()
         e2.delete('sel.first', 'sel.last')
 
 
 def copy_text():
     global selected
-    pass
+    if e2.select_present():
+        selected = e2.selection_get()
 
 
 def paste_text():
     global selected
-    if selected != "":
+    if e2.select_present():
+        e2.delete('sel.first', 'sel.last')
         e2.insert(1, selected)
-
-    # else e2.selection_get():
-    #     e2.delete('sel.first', 'sel.last')
+    else:
+        e2.insert(1, selected)
 
 
 def delete_text():
-    pass
+    if e2.select_present():
+        e2.delete('sel.first', 'sel.last')
 
 
 # Status Bar
@@ -149,5 +156,7 @@ c2.grid(row=3, column=2, ipadx=2, ipady=2, rowspan=1, columnspan=2)
 b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
 status_bar.grid(row=45, column=1, columnspan=2, sticky="ew",padx=10, pady=20)
 l1.grid(sticky=tkinter.SE, row=100, column=500, padx=10, pady=3, ipadx=2, ipady=2)
+
+
 
 window.mainloop()
