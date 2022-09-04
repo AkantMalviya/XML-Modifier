@@ -3,6 +3,7 @@ import webbrowser
 import tkinter
 from tkinter import ttk, messagebox
 
+
 # main window
 window = tkinter.Tk()
 window.title("TEST CASE DOWNLOADER")
@@ -11,8 +12,61 @@ window.geometry("950x420")
 window.option_add("*tearOff", False)
 window.resizable(False, False)
 
-global selected
+global selected, envelope_headpath, envelope_footpath
+envelope_headpath = ""
+envelope_footpath = ""
 selected = False
+
+
+def AutomateFunction():
+    global envelope_headpath, envelope_footpath
+    status_var.set("Please wait!, Test cases are downloading...")
+    if Clientstr.get() != "" and Clientstr.get() in clients and CheckVar1.get() != None:
+        b2["state"] = "disabled"
+        envelope()
+        folder = os.path.join(os.getcwd(), 'xmls')
+        list1 = []
+        for filename in os.listdir(folder):
+            if not filename.endswith('.xml'):
+                continue
+            if filename in list1:
+                continue
+            file_path = os.path.join(folder, filename)
+            with open(envelope_headpath, "r") as f, open(envelope_footpath, "r") as f1, open(file_path, "r") as f2:
+                header = f.read()
+                footer = f1.read()
+                content = f2.read()
+
+            if "</LCID>" not in content:
+                content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
+                xml_data = header + content + footer
+                with open(file_path, "w") as f:
+                    f.write(xml_data)
+            else:
+                list1.append(filename)
+
+        list1.clear()
+        status_var.set("Envelope added successfully in all the test cases")
+        b2.grid_remove()
+        menubar.entryconfig("Options", state="normal")
+
+    else:
+        status_var.set("Please Select Client & Library, Then Press Automate!")
+
+
+def location():
+    pass
+
+
+def auto_mate():
+    menubar.entryconfig("Options", state="disabled")
+    b2["state"] = "normal"
+    b2.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+    if b1["state"] == "normal" or b1["state"] == "active":
+        b1["state"] = "disabled"
+    if e2["state"] == "normal" or e2["state"] == "active":
+        e2["state"] = "disabled"
+    status_var.set("Please Select Client & Library, Then Press Automate!")
 
 
 def show_about_info():
@@ -30,21 +84,60 @@ def New():
     FileNameStr.set("")
     Clientstr.set("")
     CheckVar1.set(None)
+    if b1["state"] == "disabled":
+        b1["state"] = "normal"
+    if e2["state"] == "disabled":
+        e2["state"] = "normal"
+    if c1["state"] == "disabled":
+        c1["state"] = "normal"
+    if c2["state"] == "disabled":
+        c2["state"] = "normal"
+
     status_var.set("Welcome to test case downloader!")
 
 
-def example():
-    print("Example")
+def envelope():
+    global envelope_headpath, envelope_footpath
+    if Clientstr.get() == "OPF" and CheckVar1.get() == 1:
+        envelope_headpath = os.path.join(os.getcwd(), 'envelopes', 'OPF_Ariel360_Header.txt')
+        envelope_footpath = os.path.join(os.getcwd(), 'envelopes', 'Ariel360_Footer.txt')
+
+    elif Clientstr.get() == "OPF" and CheckVar1.get() == 2:
+        envelope_headpath = os.path.join(os.getcwd(), 'envelopes', 'OPF_ArielDB_Header.txt')
+        envelope_footpath = os.path.join(os.getcwd(), 'envelopes', 'ArielDB_Footer.txt')
+
+    elif Clientstr.get() == "IMRF" and CheckVar1.get() == 1:
+        envelope_headpath = os.path.join(os.getcwd(), 'envelopes', 'IMRF_Ariel360_Header.txt')
+        envelope_footpath = os.path.join(os.getcwd(), 'envelopes', 'Ariel360_Footer.txt')
+
+    elif Clientstr.get() == "IMRF" and CheckVar1.get() == 2:
+        envelope_headpath = os.path.join(os.getcwd(), 'envelopes', 'IMRF_ArielDB_Header.txt')
+        envelope_footpath = os.path.join(os.getcwd(), 'envelopes', 'ArielDB_Footer.txt')
 
 
 def submitFunction():
     # webbrowser.open('http://example.com')
-    with open(f'{os.getcwd()}\\xmls\\{FileNameStr.get()}.xml', "wb") as f:
-        content = f.read()
-    print(content)
-    if Clientstr.get() != "":
+    global envelope_headpath, envelope_footpath
+    envelope()
+    if Clientstr.get() != "" and Clientstr.get() in clients:
         if FileNameStr.get() != "":
-            status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get()}>")
+            try:
+                file_path = os.path.join(os.getcwd(), 'xmls', f'{FileNameStr.get()}.xml')
+                with open(envelope_headpath, "r") as f, open(envelope_footpath, "r") as f1, open(file_path, "r") as f2:
+                    header = f.read()
+                    footer = f1.read()
+                    content = f2.read()
+
+                if "</LCID>" not in content:
+                    content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
+                    xml_data = header + content + footer
+                    with open(file_path, "w") as f:
+                        f.write(xml_data)
+
+                status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get()}>")
+
+            except(FileNotFoundError, IOError, UnboundLocalError):
+                status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
 
     FileNameStr.set("")
     Clientstr.set("")
@@ -117,6 +210,8 @@ c1 = tkinter.Radiobutton(window, text="Ariel360", variable=CheckVar1, value=1, f
 c2 = tkinter.Radiobutton(window, text="ArielDB", variable=CheckVar1, value=2, font=font2)
 b1 = tkinter.Button(window, text="SUBMIT", command=submitFunction, font=font1)
 b1.config(width=20, height=2)
+b2 = tkinter.Button(window, text="Automate", command=AutomateFunction, font=font1)
+b2.config(width=20, height=2)
 
 # Menubar Options Help
 menubar = tkinter.Menu()
@@ -129,8 +224,9 @@ menubar.add_cascade(menu=options_menu, label="Options")
 menubar.add_cascade(menu=help_menu, label="Help")
 
 options_menu.add_command(label="New", command=lambda: New())
-options_menu.add_command(label="Location", command=example)
-options_menu.add_command(label="Add Client", command=example)
+options_menu.add_command(label="Location", command=location)
+# options_menu.add_command(label="Add Client", command=None)
+options_menu.add_command(label="Automate", command=lambda: auto_mate())
 options_menu.add_command(label="Exit", command=quit_app)
 help_menu.add_command(label="About", command=show_about_info)
 
@@ -156,7 +252,5 @@ c2.grid(row=3, column=2, ipadx=2, ipady=2, rowspan=1, columnspan=2)
 b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
 status_bar.grid(row=45, column=1, columnspan=2, sticky="ew",padx=10, pady=20)
 l1.grid(sticky=tkinter.SE, row=100, column=500, padx=10, pady=3, ipadx=2, ipady=2)
-
-
 
 window.mainloop()
