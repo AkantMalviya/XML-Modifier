@@ -1,5 +1,6 @@
 import os
-import webbrowser
+import subprocess
+import requests
 import tkinter
 from tkinter import ttk, messagebox
 
@@ -12,7 +13,7 @@ window.geometry("950x420")
 window.option_add("*tearOff", False)
 window.resizable(False, False)
 
-global selected, envelope_headpath, envelope_footpath
+global selected, envelope_headpath, envelope_footpath, client_link
 global clients
 clients = []
 envelope_headpath = ""
@@ -67,7 +68,8 @@ def AutomateFunction():
 
 
 def location():
-    pass
+    folderpath = os.path.join(os.getcwd(), 'xmls', 'hide')
+    subprocess.Popen(f'explorer /select,{folderpath}')
 
 
 def auto_mate():
@@ -120,14 +122,24 @@ def New():
 
 
 def envelope():
-    global envelope_headpath, envelope_footpath
-    envelope_headpath = os.path.join(os.getcwd(), 'envelopes', f'{Clientstr.get()}_{library[CheckVar1.get()-1]}_Header.txt')
+    global envelope_headpath, envelope_footpath, client_link
+    envelope_headpath = os.path.join(os.getcwd(), 'envelopes', f'{Clientstr.get().upper()}_{library[CheckVar1.get()-1]}_Header.txt')
     envelope_footpath = os.path.join(os.getcwd(), 'envelopes', f'{library[CheckVar1.get()-1]}_Footer.txt')
+    client_link = os.path.join(os.getcwd(),'imp','downloadlinks',f'{Clientstr.get().upper()}_{library[CheckVar1.get()-1]}.txt')
 
 
 def submitFunction():
-    # webbrowser.open('http://example.com')
-    global envelope_headpath, envelope_footpath
+    global envelope_headpath, envelope_footpath, client_link
+    # try:
+    #     envelope()
+    #     with open(client_link, 'r') as f:
+    #         client_link = f.read()
+    #     myfile = requests.get(client_link)
+    #     folderpath = os.path.join(os.getcwd(), 'xmls', f'{FileNameStr.get().upper()}.jpg')
+    #     with open(folderpath, "wb") as f:
+    #         f.write(myfile.content)
+    # except(FileNotFoundError, requests.exceptions.MissingSchema):
+    #     status_var.set(f"<Download link is not available for this library>")
     if Clientstr.get() != "" and Clientstr.get() in clients and FileNameStr.get() != "" and CheckVar1.get() != 0:
         try:
             envelope()
@@ -322,7 +334,7 @@ FileNameStr = tkinter.StringVar()
 Clientstr = tkinter.StringVar()
 
 # Labels and Entry
-l1 = tkinter.Label(window, text=copyryt + 'AkantMalviya')
+l1 = tkinter.Label(window, text=copyryt + 'AkantMalviya',background='white')
 l4 = tkinter.Label(window, text='LifeWorks'+trademark)
 l2 = tkinter.Label(window, text="CLIENT NAME:", font=font1, borderwidth=1, relief="solid")
 l3 = tkinter.Label(window, text="TEST FILE NAME:", font=font1, borderwidth=1, relief="solid")
