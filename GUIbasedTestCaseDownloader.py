@@ -13,6 +13,8 @@ window.option_add("*tearOff", False)
 window.resizable(False, False)
 
 global selected, envelope_headpath, envelope_footpath
+global clients
+clients = []
 envelope_headpath = ""
 envelope_footpath = ""
 selected = False
@@ -50,6 +52,8 @@ def AutomateFunction():
             list1.clear()
             status_var.set("Envelope added successfully in all the test cases")
             b2.grid_remove()
+            b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+            b1["state"] == "normal"
             menubar.entryconfig("Options", state="normal")
 
         except(FileNotFoundError, IOError, UnboundLocalError):
@@ -67,11 +71,15 @@ def location():
 
 
 def auto_mate():
-    b2["state"] = "normal"
+    if b2["state"] == "disabled":
+        b2["state"] = "normal"
     FileNameStr.set("")
     Clientstr.set("")
     CheckVar1.set(0)
     b2.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+    b3.grid_remove()
+    b4.grid_remove()
+    b1.grid_remove()
     if b1["state"] == "normal" or b1["state"] == "active":
         b1["state"] = "disabled"
     if e2["state"] == "normal" or e2["state"] == "active":
@@ -95,6 +103,8 @@ def New():
     Clientstr.set("")
     CheckVar1.set(0)
     b2.grid_remove()
+    b3.grid_remove()
+    b4.grid_remove()
     if b1["state"] == "disabled":
         b1["state"] = "normal"
     if e2["state"] == "disabled":
@@ -103,6 +113,8 @@ def New():
         c1["state"] = "normal"
     if c2["state"] == "disabled":
         c2["state"] = "normal"
+    if b1.winfo_ismapped()==0:
+        b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
 
     status_var.set("Welcome to test case downloader!")
 
@@ -178,15 +190,40 @@ def delete_text():
 
 
 def refreshClients():
-    clients.clear()
+    global clients
+    clients = list()
+    d1.set('')
     with open(client_path, 'r') as f:
         for line in f:
-            clients.append(line.strip())
+            clients.append(line.strip('\n'))
     d1['values'] = clients
 
 
 def delFunction():
-    pass
+    with open(client_path,'r') as f:
+        content = f.read()
+        new = content.replace(f'{Clientstr.get()}\n', "")
+        print(new)
+
+    with open(client_path, 'w') as f:
+        f.write(new)
+
+    refreshClients()
+    status_var.set("Client deleted successfully!")
+    FileNameStr.set("")
+    Clientstr.set("")
+    CheckVar1.set(0)
+    b4.grid_remove()
+    if b4["state"] == "normal" or b4["state"] == "active":
+        b4["state"] = "disabled"
+    if b1["state"] == "disabled":
+        b1["state"] = "normal"
+    if e2["state"] == "disabled":
+        e2["state"] = "normal"
+    if c1["state"] == "disabled":
+        c1["state"] = "normal"
+    if c2["state"] == "disabled":
+        c2["state"] = "normal"
 
 
 def delClient():
@@ -197,6 +234,10 @@ def delClient():
     b4.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
     if b1["state"] == "normal" or b1["state"] == "active":
         b1["state"] = "disabled"
+    if b2["state"] == "normal" or b2["state"] == "active":
+        b2["state"] = "disabled"
+    if b3["state"] == "normal" or b3["state"] == "active":
+        b3["state"] = "disabled"
     if e2["state"] == "normal" or e2["state"] == "active":
         e2["state"] = "disabled"
     if c1["state"] == "normal" or c1["state"] == "active":
@@ -209,17 +250,28 @@ def delClient():
 
 
 def AddFunction():
-    newclient = Clientstr.get().upper()
+    newclient = Clientstr.get().upper().replace(" ","")
     if Clientstr.get() == "" or FileNameStr.get() == "":
         status_var.set(f"<Please Type Client Name and Envelope>")
 
     elif Clientstr.get() != "" and FileNameStr.get() != "" and CheckVar1.get() != 0:
-        with open(client_path, 'a') as f:
-            f.write(f'\n{newclient}')
-        refreshClients()
-        file_path = os.path.join(os.getcwd(), 'envelopes', f'{Clientstr.get()}_{library[CheckVar1.get()-1]}_Header.txt')
-        with open(file_path, "w") as f:
-            f.write(FileNameStr.get())
+        print(clients)
+        if newclient not in clients:
+            with open(client_path, 'a') as f:
+                f.write(f'{newclient}\n')
+            refreshClients()
+            status_var.set(f"<New Client Added Successfully>")
+        else:
+            status_var.set(f"<Client Already Exist>")
+
+        file_path = os.path.join(os.getcwd(), 'envelopes', f'{newclient}_{library[CheckVar1.get()-1]}_Header.txt')
+        print(file_path)
+        if not os.path.exists(file_path):
+            with open(file_path, "w") as f:
+                f.write(FileNameStr.get())
+            status_var.set(f"<New Client Added Successfully>")
+        else:
+            status_var.set(f"<{newclient}_{library[CheckVar1.get()-1]} Already Exist!, Select Another Library>")
 
         b3.grid_remove()
         b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
@@ -232,15 +284,16 @@ def AddFunction():
         FileNameStr.set("")
         Clientstr.set("")
         CheckVar1.set(0)
-        status_var.set(f"<New Client Added Successfully>")
         menubar.entryconfig("Options", state="normal")
 
     else:
-        status_var.set(f"<Client Already Exist>")
+        status_var.set(f"<Please select any library>")
 
 
 def addClient():
-    menubar.entryconfig("Options", state="disabled")
+    if b3["state"] == "disabled":
+        b3["state"] = "normal"
+    status_var.set("Please Select Client, Library and Paste Envelope, then press ADD!")
     FileNameStr.set("")
     Clientstr.set("")
     CheckVar1.set(0)
@@ -250,6 +303,7 @@ def addClient():
     l5.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
     b1.grid_remove()
     b2.grid_remove()
+    b4.grid_remove()
     b3.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
 
 
@@ -279,7 +333,6 @@ e1 = tkinter.Entry(window, width=31, font=font1, borderwidth=1, relief="solid",t
 # Combobox and Client Name list
 d1 = ttk.Combobox(window, width=30, font=font1, textvariable=Clientstr)
 window.option_add("*TCombobox*Listbox*Font", font2)
-clients = []
 client_path = os.path.join(os.getcwd(), 'imp', 'Clients.txt')
 library = ['Ariel360', 'ArielDB']
 refreshClients()
