@@ -82,6 +82,8 @@ def auto_mate():
     b3.grid_remove()
     b4.grid_remove()
     b1.grid_remove()
+    l5.grid_remove()
+    l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
     if b1["state"] == "normal" or b1["state"] == "active":
         b1["state"] = "disabled"
     if e2["state"] == "normal" or e2["state"] == "active":
@@ -107,6 +109,8 @@ def New():
     b2.grid_remove()
     b3.grid_remove()
     b4.grid_remove()
+    l5.grid_remove()
+    l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
     if b1["state"] == "disabled":
         b1["state"] = "normal"
     if e2["state"] == "disabled":
@@ -122,28 +126,23 @@ def New():
 
 
 def envelope():
-    global envelope_headpath, envelope_footpath, client_link
+    global envelope_headpath, envelope_footpath
     envelope_headpath = os.path.join(os.getcwd(), 'envelopes', f'{Clientstr.get().upper()}_{library[CheckVar1.get()-1]}_Header.txt')
     envelope_footpath = os.path.join(os.getcwd(), 'envelopes', f'{library[CheckVar1.get()-1]}_Footer.txt')
-    client_link = os.path.join(os.getcwd(),'imp','downloadlinks',f'{Clientstr.get().upper()}_{library[CheckVar1.get()-1]}.txt')
+
+
+def clientlink():
+    global client_link
+    client_link = os.path.join(os.getcwd(), 'imp', 'downloadlinks',
+                               f'{Clientstr.get().upper()}_{library[CheckVar1.get() - 1]}.txt')
 
 
 def submitFunction():
-    global envelope_headpath, envelope_footpath, client_link
-    # try:
-    #     envelope()
-    #     with open(client_link, 'r') as f:
-    #         client_link = f.read()
-    #     myfile = requests.get(client_link)
-    #     folderpath = os.path.join(os.getcwd(), 'xmls', f'{FileNameStr.get().upper()}.jpg')
-    #     with open(folderpath, "wb") as f:
-    #         f.write(myfile.content)
-    # except(FileNotFoundError, requests.exceptions.MissingSchema):
-    #     status_var.set(f"<Download link is not available for this library>")
+    global envelope_headpath, envelope_footpath
     if Clientstr.get() != "" and Clientstr.get() in clients and FileNameStr.get() != "" and CheckVar1.get() != 0:
         try:
             envelope()
-            file_path = os.path.join(os.getcwd(), 'xmls', f'{FileNameStr.get()}.xml')
+            file_path = os.path.join(os.getcwd(), 'xmls', f'{FileNameStr.get().upper()}.xml')
             with open(envelope_headpath, "r") as f, open(envelope_footpath, "r") as f1, open(file_path, "r") as f2:
                 header = f.read()
                 footer = f1.read()
@@ -243,6 +242,8 @@ def delClient():
     FileNameStr.set("")
     Clientstr.set("")
     CheckVar1.set(0)
+    l5.grid_remove()
+    l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
     b4.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
     if b1["state"] == "normal" or b1["state"] == "active":
         b1["state"] = "disabled"
@@ -257,12 +258,10 @@ def delClient():
     if c2["state"] == "normal" or c2["state"] == "active":
         c2["state"] = "disabled"
     status_var.set("Please Select Client, Then Press Delete!")
-    # with open(client_path,'a+') as f:
-    #     f.write(clients[])
 
 
 def AddFunction():
-    newclient = Clientstr.get().upper().replace(" ","")
+    newclient = Clientstr.get().upper().replace(" ", "")
     if Clientstr.get() == "" or FileNameStr.get() == "":
         status_var.set(f"<Please Type Client Name and Envelope>")
 
@@ -297,6 +296,8 @@ def AddFunction():
         Clientstr.set("")
         CheckVar1.set(0)
         menubar.entryconfig("Options", state="normal")
+        l5.grid_remove()
+        l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
 
     else:
         status_var.set(f"<Please select any library>")
@@ -305,6 +306,8 @@ def AddFunction():
 def addClient():
     if b3["state"] == "disabled":
         b3["state"] = "normal"
+    if e2["state"] == "disabled":
+        e2["state"] = "normal"
     status_var.set("Please Select Client, Library and Paste Envelope, then press ADD!")
     FileNameStr.set("")
     Clientstr.set("")
@@ -317,6 +320,66 @@ def addClient():
     b2.grid_remove()
     b4.grid_remove()
     b3.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+
+
+def downloadFunction():
+    global client_link
+    if Clientstr.get() != "" and Clientstr.get() in clients and FileNameStr.get() != "" and CheckVar1.get() == 1:
+        folderpath = os.path.join(os.getcwd(), 'xmls', f'{FileNameStr.get().upper()}.xml')
+        if not os.path.exists(folderpath):
+            try:
+                clientlink()
+                with open(client_link, 'r') as f:
+                    client_link = f.read()
+                # Change the client link here only change FileNamestr
+                myfile = requests.get(client_link)
+                with open(folderpath, "wb") as f:
+                    f.write(myfile.content)
+                status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get().upper()}_{library[CheckVar1.get() - 1]}>")
+                FileNameStr.set("")
+                Clientstr.set("")
+                CheckVar1.set(0)
+                b5.grid_remove()
+                if b1.winfo_ismapped() == 0:
+                    b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+            except FileNotFoundError:
+                status_var.set(f"<{Clientstr.get().upper()}_{library[CheckVar1.get() - 1]} Download link is not available>")
+            except(IOError, UnboundLocalError):
+                status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
+            except requests.exceptions.MissingSchema:
+                status_var.set(f"Test case not found on the portal!")
+        else:
+            status_var.set(f"{FileNameStr.get().upper()} is already exist, click on Options/Location")
+
+    else:
+        FileNameStr.set("")
+        Clientstr.set("")
+        CheckVar1.set(0)
+        status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
+
+
+def download():
+    FileNameStr.set("")
+    Clientstr.set("")
+    CheckVar1.set(0)
+    b1.grid_remove()
+    b2.grid_remove()
+    b3.grid_remove()
+    b4.grid_remove()
+    l5.grid_remove()
+    l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+    if b5.winfo_ismapped()==0:
+        b5.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+    b1["state"] = "disabled"
+    if b5["state"] == "disabled":
+        b5["state"] = "normal"
+    if e2["state"] == "disabled":
+        e2["state"] = "normal"
+    if c1["state"] == "disabled":
+        c1["state"] = "normal"
+    if c2["state"] == "disabled":
+        c2["state"] = "normal"
+    status_var.set("Welcome to test case downloader!")
 
 
 # Status Bar
@@ -335,7 +398,7 @@ Clientstr = tkinter.StringVar()
 
 # Labels and Entry
 l1 = tkinter.Label(window, text=copyryt + 'AkantMalviya',background='white')
-l4 = tkinter.Label(window, text='LifeWorks'+trademark)
+l4 = tkinter.Label(window, text='LifeWorks'+trademark, background='white')
 l2 = tkinter.Label(window, text="CLIENT NAME:", font=font1, borderwidth=1, relief="solid")
 l3 = tkinter.Label(window, text="TEST FILE NAME:", font=font1, borderwidth=1, relief="solid")
 l5 = tkinter.Label(window, text="ENVELOPE HEADER:", font=font1, borderwidth=1, relief="solid")
@@ -360,6 +423,8 @@ b3 = tkinter.Button(window, text="ADD", command=AddFunction, font=font1)
 b3.config(width=20, height=2)
 b4 = tkinter.Button(window, text="DELETE", command=delFunction, font=font1)
 b4.config(width=20, height=2)
+b5 = tkinter.Button(window, text="DOWNLOAD", command=downloadFunction, font=font1)
+b5.config(width=20, height=2)
 
 # Menubar Options Help
 menubar = tkinter.Menu()
@@ -373,9 +438,11 @@ menubar.add_cascade(menu=help_menu, label="Help")
 
 options_menu.add_command(label="New", command=lambda: New())
 options_menu.add_command(label="Location", command=lambda:location())
+options_menu.add_command(label="Automate", command=lambda: auto_mate())
+options_menu.add_command(label="Download", command=lambda: download())
 options_menu.add_command(label="Add Client", command=lambda:addClient())
 options_menu.add_command(label="Delete Client", command=lambda:delClient())
-options_menu.add_command(label="Automate", command=lambda: auto_mate())
+
 options_menu.add_command(label="Exit", command=lambda:quit_app())
 help_menu.add_command(label="About", command=lambda:show_about_info())
 

@@ -1,1 +1,1 @@
-https://drive.google.com/u/0/uc?id=16hZ3BOkglAcuqRw3-n3Sc5pPvmynqQnb&export=download
+http://VMAZB09DBFE1:22838/api/schema/DocumentDataString?casenumber=CAS-12012-Y7J9&set language=lcid=1033
