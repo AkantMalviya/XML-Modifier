@@ -81,6 +81,7 @@ def auto_mate():
     b2.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
     b3.grid_remove()
     b4.grid_remove()
+    b5.grid_remove()
     b1.grid_remove()
     l5.grid_remove()
     l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
@@ -94,7 +95,14 @@ def auto_mate():
 def show_about_info():
     messagebox.showinfo(
         title="About",
-        message="By this software\n1. you can download any test case.\n2. you can add envelope of any specific client."
+        message='''By this software
+        1. you can add envelope of any specific client.
+        2. you can download any specific client test case.
+        3. you can automate XML envelope addition.
+           i.e. 100 xmls in just 10 sec
+        4. you can add client and its envelope in this software.
+        5. you can remove any client from the software.
+        '''
     )
 
 
@@ -109,6 +117,7 @@ def New():
     b2.grid_remove()
     b3.grid_remove()
     b4.grid_remove()
+    b5.grid_remove()
     l5.grid_remove()
     l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
     if b1["state"] == "disabled":
@@ -213,28 +222,29 @@ def refreshClients():
 def delFunction():
     with open(client_path,'r') as f:
         content = f.read()
-        new = content.replace(f'{Clientstr.get()}\n', "")
-        print(new)
+    if Clientstr.get().upper().replace(" ","") in content:
+        new = content.replace(f'{Clientstr.get().upper().replace(" ","")}\n', "")
+        with open(client_path, 'w') as f:
+            f.write(new)
+        refreshClients()
+        status_var.set("Client deleted successfully!")
+        FileNameStr.set("")
+        Clientstr.set("")
+        CheckVar1.set(0)
+        b4.grid_remove()
+        if b4["state"] == "normal" or b4["state"] == "active":
+            b4["state"] = "disabled"
+        if b1["state"] == "disabled":
+            b1["state"] = "normal"
+        if e2["state"] == "disabled":
+            e2["state"] = "normal"
+        if c1["state"] == "disabled":
+            c1["state"] = "normal"
+        if c2["state"] == "disabled":
+            c2["state"] = "normal"
+    else:
+        status_var.set("Client not found!")
 
-    with open(client_path, 'w') as f:
-        f.write(new)
-
-    refreshClients()
-    status_var.set("Client deleted successfully!")
-    FileNameStr.set("")
-    Clientstr.set("")
-    CheckVar1.set(0)
-    b4.grid_remove()
-    if b4["state"] == "normal" or b4["state"] == "active":
-        b4["state"] = "disabled"
-    if b1["state"] == "disabled":
-        b1["state"] = "normal"
-    if e2["state"] == "disabled":
-        e2["state"] = "normal"
-    if c1["state"] == "disabled":
-        c1["state"] = "normal"
-    if c2["state"] == "disabled":
-        c2["state"] = "normal"
 
 
 def delClient():
@@ -243,6 +253,7 @@ def delClient():
     Clientstr.set("")
     CheckVar1.set(0)
     l5.grid_remove()
+    b5.grid_remove()
     l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
     b4.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
     if b1["state"] == "normal" or b1["state"] == "active":
@@ -319,6 +330,7 @@ def addClient():
     b1.grid_remove()
     b2.grid_remove()
     b4.grid_remove()
+    b5.grid_remove()
     b3.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
 
 
@@ -331,8 +343,9 @@ def downloadFunction():
                 clientlink()
                 with open(client_link, 'r') as f:
                     client_link = f.read()
-                # Change the client link here only change FileNamestr
-                myfile = requests.get(client_link)
+                testcase = client_link[client_link.find("=") + 1:client_link.find("&")]
+                filename = FileNameStr.get().upper().replace(" ","")
+                myfile = requests.get(client_link.replace(testcase, filename))
                 with open(folderpath, "wb") as f:
                     f.write(myfile.content)
                 status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get().upper()}_{library[CheckVar1.get() - 1]}>")
