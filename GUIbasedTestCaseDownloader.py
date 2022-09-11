@@ -1,6 +1,5 @@
 # Packages
 import os
-import subprocess
 import requests
 import tkinter
 from tkinter import ttk, messagebox
@@ -24,8 +23,8 @@ selected = False
 
 
 def location():
-    folderpath = os.path.join(os.getcwd(), 'xmls', 'hide')
-    subprocess.Popen(f'explorer /select,{folderpath}')
+    folderpath = os.path.join(os.getcwd(), 'xmls')
+    os.startfile(folderpath)
 
 
 def show_about_info():
