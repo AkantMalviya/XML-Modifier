@@ -25,7 +25,5 @@ applications, and to alter and redistribute it, provided that the following cond
 4. Modified versions in source or binary form must be plainly marked as such, and must not be
    misrepresented as being the original software.
 
-Thanks & Regards
+Thanks
 Akant Malviya
-Implementation Analyst
-Lifeworks

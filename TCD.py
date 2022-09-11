@@ -114,7 +114,7 @@ def submitFunction():
             with open(file_path, "r") as f2:
                 content = f2.read()
 
-            if "</LCID>" not in content:
+            if header not in content:
                 content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
                 xml_data = header + content + footer
                 with open(file_path, "w") as f:
@@ -155,7 +155,7 @@ def AutomateFunction():
                     footer = f1.read()
                     content = f2.read()
 
-                if "</LCID>" not in content:
+                if header not in content:
                     content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
                     xml_data = header + content + footer
                     with open(file_path, "w") as f:
