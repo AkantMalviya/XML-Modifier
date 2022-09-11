@@ -31,15 +31,15 @@ def location():
 def show_about_info():
     messagebox.showinfo(
         title="About",
-        message='''By this software
-        1. you can add envelope of any specific client.
-        2. you can download any specific client test case.
-        3. you can automate XML envelope addition.
-           i.e. 100 xml's in a sec
-        4. you can add client and its envelope in this software.
-        5. you can remove any client from the software.
-        '''
-    )
+        message=f'''TEST CASE DOWNLOADER\n\nOptions->\n
+        1. You Can Add Envelope Of Any Specific Client.\n
+        2. Go To The XML File Location.\n
+        3. Automate XML Envelope Addition.\n
+        4. Download Any Specific Client Test Case.\n
+        5. Add Any Client And Its Envelope In The Software.\n
+        6. Delete Any Client From The Software.\n
+        7. Exit\n\n\t\t\t\t\t{brand}
+        ''')
 
 
 def do_popup(event):
@@ -422,9 +422,10 @@ FileNameStr = tkinter.StringVar()
 CheckVar1 = tkinter.IntVar()
 client_path = os.path.join(os.getcwd(), 'imp', 'Clients.txt')
 library = ['Ariel360', 'ArielDB']
+brand = copyryt + 'AkantMalviya'
 
 # Labels and Entry
-l1 = tkinter.Label(window, text=copyryt + 'AkantMalviya',background='white')
+l1 = tkinter.Label(window, text=brand, background='white')
 l2 = tkinter.Label(window, text="CLIENT NAME:", font=font1, borderwidth=1, relief="solid")
 l3 = tkinter.Label(window, text="TEST FILE NAME:", font=font1, borderwidth=1, relief="solid")
 l4 = tkinter.Label(window, text='LifeWorks'+trademark, background='white')
