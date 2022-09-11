@@ -1,2 +1,3 @@
 Don't add unusual client and their envelopes
+Don't delete hide folder from xmls
 Please move your test cases from xmls after work
