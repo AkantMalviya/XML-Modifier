@@ -1,3 +1,4 @@
+# Packages
 import os
 import subprocess
 import requests
@@ -5,7 +6,7 @@ import tkinter
 from tkinter import ttk, messagebox
 
 
-# main window
+# tkinter main window
 window = tkinter.Tk()
 window.title("TEST CASE DOWNLOADER")
 window.configure(background="#fff")
@@ -13,6 +14,7 @@ window.geometry("950x420")
 window.option_add("*tearOff", False)
 window.resizable(False, False)
 
+# Global variables
 global selected, envelope_headpath, envelope_footpath, client_link
 global clients
 clients = []
@@ -21,75 +23,9 @@ envelope_footpath = ""
 selected = False
 
 
-def AutomateFunction():
-    global envelope_headpath, envelope_footpath
-    if Clientstr.get() != "" and Clientstr.get() in clients and CheckVar1.get() != 0:
-        try:
-            status_var.set("Please wait!, Test cases are downloading...")
-            envelope()
-            folder = os.path.join(os.getcwd(), 'xmls')
-            list1 = []
-            b2["state"] = "disabled"
-            menubar.entryconfig("Options", state="disabled")
-            for filename in os.listdir(folder):
-                if not filename.endswith('.xml'):
-                    continue
-                if filename in list1:
-                    continue
-                file_path = os.path.join(folder, filename)
-                with open(envelope_headpath, "r") as f, open(envelope_footpath, "r") as f1, open(file_path, "r") as f2:
-                    header = f.read()
-                    footer = f1.read()
-                    content = f2.read()
-
-                if "</LCID>" not in content:
-                    content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
-                    xml_data = header + content + footer
-                    with open(file_path, "w") as f:
-                        f.write(xml_data)
-                else:
-                    list1.append(filename)
-
-            list1.clear()
-            status_var.set("Envelope added successfully in all the test cases")
-            b2.grid_remove()
-            b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
-            b1["state"] == "normal"
-            menubar.entryconfig("Options", state="normal")
-
-        except(FileNotFoundError, IOError, UnboundLocalError):
-            b2["state"] = "normal"
-            list1.clear()
-            menubar.entryconfig("Options", state="normal")
-            status_var.set("Please Select Client & Library, Then Press Automate!")
-
-    else:
-        status_var.set("Please Select Client & Library, Then Press Automate!")
-
-
 def location():
     folderpath = os.path.join(os.getcwd(), 'xmls', 'hide')
     subprocess.Popen(f'explorer /select,{folderpath}')
-
-
-def auto_mate():
-    if b2["state"] == "disabled":
-        b2["state"] = "normal"
-    FileNameStr.set("")
-    Clientstr.set("")
-    CheckVar1.set(0)
-    b2.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
-    b3.grid_remove()
-    b4.grid_remove()
-    b5.grid_remove()
-    b1.grid_remove()
-    l5.grid_remove()
-    l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
-    if b1["state"] == "normal" or b1["state"] == "active":
-        b1["state"] = "disabled"
-    if e2["state"] == "normal" or e2["state"] == "active":
-        e2["state"] = "disabled"
-    status_var.set("Please Select Client & Library, Then Press Automate!")
 
 
 def show_about_info():
@@ -99,80 +35,11 @@ def show_about_info():
         1. you can add envelope of any specific client.
         2. you can download any specific client test case.
         3. you can automate XML envelope addition.
-           i.e. 100 xmls in just 10 sec
+           i.e. 100 xml's in a sec
         4. you can add client and its envelope in this software.
         5. you can remove any client from the software.
         '''
     )
-
-
-def quit_app():
-    window.destroy()
-
-
-def New():
-    FileNameStr.set("")
-    Clientstr.set("")
-    CheckVar1.set(0)
-    b2.grid_remove()
-    b3.grid_remove()
-    b4.grid_remove()
-    b5.grid_remove()
-    l5.grid_remove()
-    l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
-    if b1["state"] == "disabled":
-        b1["state"] = "normal"
-    if e2["state"] == "disabled":
-        e2["state"] = "normal"
-    if c1["state"] == "disabled":
-        c1["state"] = "normal"
-    if c2["state"] == "disabled":
-        c2["state"] = "normal"
-    if b1.winfo_ismapped()==0:
-        b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
-
-    status_var.set("Welcome to test case downloader!")
-
-
-def envelope():
-    global envelope_headpath, envelope_footpath
-    envelope_headpath = os.path.join(os.getcwd(), 'envelopes', f'{Clientstr.get().upper()}_{library[CheckVar1.get()-1]}_Header.txt')
-    envelope_footpath = os.path.join(os.getcwd(), 'envelopes', f'{library[CheckVar1.get()-1]}_Footer.txt')
-
-
-def clientlink():
-    global client_link
-    client_link = os.path.join(os.getcwd(), 'imp', 'downloadlinks',
-                               f'{Clientstr.get().upper()}_{library[CheckVar1.get() - 1]}.txt')
-
-
-def submitFunction():
-    global envelope_headpath, envelope_footpath
-    if Clientstr.get() != "" and Clientstr.get() in clients and FileNameStr.get() != "" and CheckVar1.get() != 0:
-        try:
-            envelope()
-            file_path = os.path.join(os.getcwd(), 'xmls', f'{FileNameStr.get().upper()}.xml')
-            with open(envelope_headpath, "r") as f, open(envelope_footpath, "r") as f1, open(file_path, "r") as f2:
-                header = f.read()
-                footer = f1.read()
-                content = f2.read()
-
-            if "</LCID>" not in content:
-                content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
-                xml_data = header + content + footer
-                with open(file_path, "w") as f:
-                    f.write(xml_data)
-
-            status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get()}>")
-
-        except(FileNotFoundError, IOError, UnboundLocalError):
-            status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
-
-    else:
-        FileNameStr.set("")
-        Clientstr.set("")
-        CheckVar1.set(0)
-        status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
 
 
 def do_popup(event):
@@ -209,6 +76,10 @@ def delete_text():
         e2.delete('sel.first', 'sel.last')
 
 
+def quit_app():
+    window.destroy()
+
+
 def refreshClients():
     global clients
     clients = list()
@@ -219,56 +90,96 @@ def refreshClients():
     d1['values'] = clients
 
 
-def delFunction():
-    with open(client_path,'r') as f:
-        content = f.read()
-    if Clientstr.get().upper().replace(" ","") in content:
-        new = content.replace(f'{Clientstr.get().upper().replace(" ","")}\n', "")
-        with open(client_path, 'w') as f:
-            f.write(new)
-        refreshClients()
-        status_var.set("Client deleted successfully!")
+def envelope():
+    global envelope_headpath, envelope_footpath
+    envelope_headpath = os.path.join(os.getcwd(), 'envelopes', f'{Clientstr.get().upper()}_{library[CheckVar1.get()-1]}_Header.txt')
+    envelope_footpath = os.path.join(os.getcwd(), 'envelopes', f'{library[CheckVar1.get()-1]}_Footer.txt')
+
+
+def clientlink():
+    global client_link
+    client_link = os.path.join(os.getcwd(), 'imp', 'downloadlinks',
+                               f'{Clientstr.get().upper()}_{library[CheckVar1.get() - 1]}.txt')
+
+
+def submitFunction():
+    global envelope_headpath, envelope_footpath
+    if Clientstr.get() != "" and Clientstr.get() in clients and FileNameStr.get() != "" and CheckVar1.get() != 0:
+        try:
+            envelope()
+            file_path = os.path.join(os.getcwd(), 'xmls', f'{FileNameStr.get().upper().replace(" ","")}.xml')
+            with open(envelope_headpath, "r") as f, open(envelope_footpath, "r") as f1:
+                header = f.read()
+                footer = f1.read()
+
+            with open(file_path, "r") as f2:
+                content = f2.read()
+
+            if "</LCID>" not in content:
+                content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
+                xml_data = header + content + footer
+                with open(file_path, "w") as f:
+                    f.write(xml_data)
+
+            status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get()}>")
+            FileNameStr.set("")
+            Clientstr.set("")
+            CheckVar1.set(0)
+
+        except (FileNotFoundError, UnboundLocalError, IOError):
+            status_var.set("<File not found at location!>")
+
+    else:
         FileNameStr.set("")
         Clientstr.set("")
         CheckVar1.set(0)
-        b4.grid_remove()
-        if b4["state"] == "normal" or b4["state"] == "active":
-            b4["state"] = "disabled"
-        if b1["state"] == "disabled":
-            b1["state"] = "normal"
-        if e2["state"] == "disabled":
-            e2["state"] = "normal"
-        if c1["state"] == "disabled":
-            c1["state"] = "normal"
-        if c2["state"] == "disabled":
-            c2["state"] = "normal"
+        status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
+
+
+def AutomateFunction():
+    global envelope_headpath, envelope_footpath
+    if Clientstr.get() != "" and Clientstr.get() in clients and CheckVar1.get() != 0:
+        try:
+            status_var.set("Please wait!, Test cases are downloading...")
+            envelope()
+            folder = os.path.join(os.getcwd(), 'xmls')
+            list1 = []
+            menubar.entryconfig("Options", state="disabled")
+            for filename in os.listdir(folder):
+                if not filename.endswith('.xml'):
+                    continue
+                if filename in list1:
+                    continue
+                file_path = os.path.join(folder, filename)
+                with open(envelope_headpath, "r") as f, open(envelope_footpath, "r") as f1, open(file_path, "r") as f2:
+                    header = f.read()
+                    footer = f1.read()
+                    content = f2.read()
+
+                if "</LCID>" not in content:
+                    content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
+                    xml_data = header + content + footer
+                    with open(file_path, "w") as f:
+                        f.write(xml_data)
+                else:
+                    list1.append(filename)
+
+            list1.clear()
+            status_var.set("Envelope added successfully in all the test cases")
+            b2.grid_remove()
+            if b1.winfo_ismapped()==0:
+                b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+            menubar.entryconfig("Options", state="normal")
+
+        except(FileNotFoundError, IOError, UnboundLocalError):
+            list1.clear()
+            menubar.entryconfig("Options", state="normal")
+            status_var.set("Please Select Client & Library, Then Press Automate!")
+
     else:
-        status_var.set("Client not found!")
-
-
-
-def delClient():
-    b4["state"] = "normal"
-    FileNameStr.set("")
-    Clientstr.set("")
-    CheckVar1.set(0)
-    l5.grid_remove()
-    b5.grid_remove()
-    l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
-    b4.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
-    if b1["state"] == "normal" or b1["state"] == "active":
-        b1["state"] = "disabled"
-    if b2["state"] == "normal" or b2["state"] == "active":
-        b2["state"] = "disabled"
-    if b3["state"] == "normal" or b3["state"] == "active":
-        b3["state"] = "disabled"
-    if e2["state"] == "normal" or e2["state"] == "active":
-        e2["state"] = "disabled"
-    if c1["state"] == "normal" or c1["state"] == "active":
-        c1["state"] = "disabled"
-    if c2["state"] == "normal" or c2["state"] == "active":
-        c2["state"] = "disabled"
-    status_var.set("Please Select Client, Then Press Delete!")
+        Clientstr.set("")
+        CheckVar1.set(0)
+        status_var.set("Please Select Client & Library, Then Press Automate!")
 
 
 def AddFunction():
@@ -277,7 +188,6 @@ def AddFunction():
         status_var.set(f"<Please Type Client Name and Envelope>")
 
     elif Clientstr.get() != "" and FileNameStr.get() != "" and CheckVar1.get() != 0:
-        print(clients)
         if newclient not in clients:
             with open(client_path, 'a') as f:
                 f.write(f'{newclient}\n')
@@ -287,7 +197,6 @@ def AddFunction():
             status_var.set(f"<Client Already Exist>")
 
         file_path = os.path.join(os.getcwd(), 'envelopes', f'{newclient}_{library[CheckVar1.get()-1]}_Header.txt')
-        print(file_path)
         if not os.path.exists(file_path):
             with open(file_path, "w") as f:
                 f.write(FileNameStr.get())
@@ -295,43 +204,47 @@ def AddFunction():
         else:
             status_var.set(f"<{newclient}_{library[CheckVar1.get()-1]} Already Exist!, Select Another Library>")
 
-        b3.grid_remove()
-        b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
-        if b1["state"] == "disabled":
-            b1["state"] = "normal"
-        e1.grid_remove()
-        d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
-        l5.grid_remove()
-        l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
         FileNameStr.set("")
         Clientstr.set("")
         CheckVar1.set(0)
-        menubar.entryconfig("Options", state="normal")
+        b3.grid_remove()
+        e1.grid_remove()
         l5.grid_remove()
-        l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+        if b1.winfo_ismapped() == 0:
+            b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+        if d1.winfo_ismapped() == 0:
+            d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
+        if l3.winfo_ismapped() == 0:
+            l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+        menubar.entryconfig("Options", state="normal")
 
     else:
         status_var.set(f"<Please select any library>")
 
 
-def addClient():
-    if b3["state"] == "disabled":
-        b3["state"] = "normal"
-    if e2["state"] == "disabled":
-        e2["state"] = "normal"
-    status_var.set("Please Select Client, Library and Paste Envelope, then press ADD!")
-    FileNameStr.set("")
-    Clientstr.set("")
-    CheckVar1.set(0)
-    d1.grid_remove()
-    e1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
-    l3.grid_remove()
-    l5.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
-    b1.grid_remove()
-    b2.grid_remove()
-    b4.grid_remove()
-    b5.grid_remove()
-    b3.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+def delFunction():
+    with open(client_path,'r') as f:
+        content = f.read()
+    if Clientstr.get().upper().replace(" ","") in content and Clientstr.get() != "":
+        new = content.replace(f'{Clientstr.get().upper().replace(" ","")}\n', "")
+        with open(client_path, 'w') as f:
+            f.write(new)
+        refreshClients()
+        status_var.set("Client deleted successfully!")
+        FileNameStr.set("")
+        Clientstr.set("")
+        CheckVar1.set(0)
+        if e2["state"] == "disabled":
+            e2["state"] = "normal"
+        if c1["state"] == "disabled":
+            c1["state"] = "normal"
+        if c2["state"] == "disabled":
+            c2["state"] = "normal"
+        b4.grid_remove()
+        if b1.winfo_ismapped() == 0:
+            b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+    else:
+        status_var.set("<Client not found!>")
 
 
 def downloadFunction():
@@ -371,6 +284,106 @@ def downloadFunction():
         status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
 
 
+def New():
+    FileNameStr.set("")
+    Clientstr.set("")
+    CheckVar1.set(0)
+    l5.grid_remove()
+    e1.grid_remove()
+    b2.grid_remove()
+    b3.grid_remove()
+    b4.grid_remove()
+    b5.grid_remove()
+    if e2["state"] == "disabled":
+        e2["state"] = "normal"
+    if c1["state"] == "disabled":
+        c1["state"] = "normal"
+    if c2["state"] == "disabled":
+        c2["state"] = "normal"
+    if d1.winfo_ismapped() == 0:
+        d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
+    if b1.winfo_ismapped() == 0:
+        b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+    if l3.winfo_ismapped() == 0:
+        l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+
+    status_var.set("Welcome to test case downloader!")
+
+
+def auto_mate():
+    FileNameStr.set("")
+    Clientstr.set("")
+    CheckVar1.set(0)
+    e1.grid_remove()
+    b1.grid_remove()
+    b3.grid_remove()
+    b4.grid_remove()
+    b5.grid_remove()
+    l5.grid_remove()
+    if e2["state"] == "normal" or e2["state"] == "active":
+        e2["state"] = "disabled"
+    if d1.winfo_ismapped() == 0:
+        d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
+    if b2.winfo_ismapped()==0:
+        b2.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+    if l3.winfo_ismapped()==0:
+        l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+
+    status_var.set("Please Select Client & Library, Then Press Automate!")
+
+
+def addClient():
+    FileNameStr.set("")
+    Clientstr.set("")
+    CheckVar1.set(0)
+    d1.grid_remove()
+    l3.grid_remove()
+    b1.grid_remove()
+    b2.grid_remove()
+    b4.grid_remove()
+    b5.grid_remove()
+    if e2["state"] == "disabled":
+        e2["state"] = "normal"
+    if c1["state"] == "disabled":
+        c1["state"] = "normal"
+    if c2["state"] == "disabled":
+        c2["state"] = "normal"
+    if e1.winfo_ismapped() == 0:
+        e1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
+    if l5.winfo_ismapped() == 0:
+        l5.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+    if b3.winfo_ismapped() == 0:
+        b3.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+
+    status_var.set("Please Select Client, Library and Paste Envelope, then press ADD!")
+
+
+def delClient():
+    FileNameStr.set("")
+    Clientstr.set("")
+    CheckVar1.set(0)
+    e1.grid_remove()
+    l5.grid_remove()
+    b1.grid_remove()
+    b2.grid_remove()
+    b3.grid_remove()
+    b5.grid_remove()
+    if e2["state"] == "normal" or e2["state"] == "active":
+        e2["state"] = "disabled"
+    if c1["state"] == "normal" or c1["state"] == "active":
+        c1["state"] = "disabled"
+    if c2["state"] == "normal" or c2["state"] == "active":
+        c2["state"] = "disabled"
+    if d1.winfo_ismapped() == 0:
+        d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
+    if l3.winfo_ismapped() == 0:
+        l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+    if b4.winfo_ismapped() == 0:
+        b4.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+
+    status_var.set("Please Select Client, Then Press Delete!")
+
+
 def download():
     FileNameStr.set("")
     Clientstr.set("")
@@ -380,18 +393,17 @@ def download():
     b3.grid_remove()
     b4.grid_remove()
     l5.grid_remove()
-    l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
-    if b5.winfo_ismapped()==0:
-        b5.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
-    b1["state"] = "disabled"
-    if b5["state"] == "disabled":
-        b5["state"] = "normal"
     if e2["state"] == "disabled":
         e2["state"] = "normal"
     if c1["state"] == "disabled":
         c1["state"] = "normal"
     if c2["state"] == "disabled":
         c2["state"] = "normal"
+    if l3.winfo_ismapped() == 0:
+        l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+    if b5.winfo_ismapped() == 0:
+        b5.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+
     status_var.set("Welcome to test case downloader!")
 
 
@@ -405,27 +417,27 @@ copyryt = u"\u00A9"
 trademark = u"\u2122"
 font1 = ('Times', 20)
 font2 = ('Times', 15)
-CheckVar1 = tkinter.IntVar()
-FileNameStr = tkinter.StringVar()
 Clientstr = tkinter.StringVar()
+FileNameStr = tkinter.StringVar()
+CheckVar1 = tkinter.IntVar()
+client_path = os.path.join(os.getcwd(), 'imp', 'Clients.txt')
+library = ['Ariel360', 'ArielDB']
 
 # Labels and Entry
 l1 = tkinter.Label(window, text=copyryt + 'AkantMalviya',background='white')
-l4 = tkinter.Label(window, text='LifeWorks'+trademark, background='white')
 l2 = tkinter.Label(window, text="CLIENT NAME:", font=font1, borderwidth=1, relief="solid")
 l3 = tkinter.Label(window, text="TEST FILE NAME:", font=font1, borderwidth=1, relief="solid")
+l4 = tkinter.Label(window, text='LifeWorks'+trademark, background='white')
 l5 = tkinter.Label(window, text="ENVELOPE HEADER:", font=font1, borderwidth=1, relief="solid")
-e2 = tkinter.Entry(window, width=31, font=font1, borderwidth=1, relief="solid",textvariable=FileNameStr, selectbackground="Yellow", selectforeground="black")
 e1 = tkinter.Entry(window, width=31, font=font1, borderwidth=1, relief="solid",textvariable=Clientstr, selectbackground="Yellow", selectforeground="black")
+e2 = tkinter.Entry(window, width=31, font=font1, borderwidth=1, relief="solid",textvariable=FileNameStr, selectbackground="Yellow", selectforeground="black")
 
 # Combobox and Client Name list
 d1 = ttk.Combobox(window, width=30, font=font1, textvariable=Clientstr)
 window.option_add("*TCombobox*Listbox*Font", font2)
-client_path = os.path.join(os.getcwd(), 'imp', 'Clients.txt')
-library = ['Ariel360', 'ArielDB']
 refreshClients()
 
-# Radio Buttons and Submit
+# Radio Buttons and Action Buttons
 c1 = tkinter.Radiobutton(window, text="Ariel360", variable=CheckVar1, value=1, font=font2)
 c2 = tkinter.Radiobutton(window, text="ArielDB", variable=CheckVar1, value=2, font=font2)
 b1 = tkinter.Button(window, text="SUBMIT", command=submitFunction, font=font1)
@@ -442,7 +454,6 @@ b5.config(width=20, height=2)
 # Menubar Options Help
 menubar = tkinter.Menu()
 window.config(menu=menubar)
-
 options_menu = tkinter.Menu(menubar)
 help_menu = tkinter.Menu(menubar)
 
@@ -455,7 +466,6 @@ options_menu.add_command(label="Automate", command=lambda: auto_mate())
 options_menu.add_command(label="Download", command=lambda: download())
 options_menu.add_command(label="Add Client", command=lambda:addClient())
 options_menu.add_command(label="Delete Client", command=lambda:delClient())
-
 options_menu.add_command(label="Exit", command=lambda:quit_app())
 help_menu.add_command(label="About", command=lambda:show_about_info())
 
@@ -471,7 +481,7 @@ m.add_command(label="Delete", command=lambda: delete_text())
 window.bind("<Button-3>", do_popup)
 
 
-# Grid
+# Grid Function
 def gridFunction():
     l4.grid(sticky=tkinter.NW, row=0, column=0, padx=10, pady=12, ipadx=2, ipady=2)
     l2.grid(row=1, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
