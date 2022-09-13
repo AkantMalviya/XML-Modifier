@@ -5,13 +5,23 @@ import tkinter
 from tkinter import ttk, messagebox
 
 
+# Fonts
+copyryt = u"\u00A9"
+trademark = u"\u2122"
+font4 = ('Times', 20)
+font1 = ('Times', 20, 'bold')
+font2 = ('Times', 15)
+font3 = ('Times', 15, 'bold')
+
 # tkinter main window
 window = tkinter.Tk()
 window.title("TEST CASE DOWNLOADER")
 window.configure(background="#fff")
-window.geometry("950x420")
+window.geometry("1000x390")
 window.option_add("*tearOff", False)
 window.resizable(False, False)
+photo = tkinter.PhotoImage(file='images/xml.png')
+window.iconphoto(False, photo)
 
 # Global variables
 global selected, envelope_headpath, envelope_footpath, client_link
@@ -30,7 +40,7 @@ def location():
 def show_about_info():
     messagebox.showinfo(
         title="About",
-        message=f'''TEST CASE DOWNLOADER\n\nOptions->\n
+        message=f'''Options:\n
         1. You Can Add Envelope Of Any Specific Client.\n
         2. Go To The XML File Location.\n
         3. Automate XML Envelope Addition.\n
@@ -120,19 +130,19 @@ def submitFunction():
                 with open(file_path, "w") as f:
                     f.write(xml_data)
 
-            status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get()}>")
+            status_var.set(f"<{FileNameStr.get()} Has Been Downloaded For {Clientstr.get()}>")
             FileNameStr.set("")
             Clientstr.set("")
             CheckVar1.set(0)
 
         except (FileNotFoundError, UnboundLocalError, IOError):
-            status_var.set("<File not found at location!>")
+            status_var.set("<File Not Found At Location!>")
 
     else:
         FileNameStr.set("")
         Clientstr.set("")
         CheckVar1.set(0)
-        status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
+        status_var.set(f"<Please Enter A Valid FileName Or ClientName & Select Anyone Library>")
 
 
 def AutomateFunction():
@@ -411,11 +421,7 @@ status_var = tkinter.StringVar()
 status_var.set("Welcome to test case downloader!")
 status_bar = tkinter.Label(window, textvariable=status_var, anchor=tkinter.N, font=('Helvetica', 12, 'bold'))
 
-# Fonts and variables
-copyryt = u"\u00A9"
-trademark = u"\u2122"
-font1 = ('Times', 20)
-font2 = ('Times', 15)
+# variables
 Clientstr = tkinter.StringVar()
 FileNameStr = tkinter.StringVar()
 CheckVar1 = tkinter.IntVar()
@@ -423,35 +429,39 @@ client_path = os.path.join(os.getcwd(), 'imp', 'Clients.txt')
 library = ['Ariel360', 'ArielDB']
 brand = copyryt + 'AkantMalviya'
 
+# image logo
+img = tkinter.PhotoImage(master=window, file="images/logo.png")
+img = img.subsample(4,4)
+logo = tkinter.Label(master=window, image=img, background='white')
 # Labels and Entry
 l1 = tkinter.Label(window, text=brand, background='white')
 l2 = tkinter.Label(window, text="CLIENT NAME:", font=font1, borderwidth=1, relief="solid")
 l3 = tkinter.Label(window, text="TEST FILE NAME:", font=font1, borderwidth=1, relief="solid")
-l4 = tkinter.Label(window, text='LifeWorks'+trademark, background='white')
 l5 = tkinter.Label(window, text="ENVELOPE HEADER:", font=font1, borderwidth=1, relief="solid")
-e1 = tkinter.Entry(window, width=31, font=font1, borderwidth=1, relief="solid",textvariable=Clientstr, selectbackground="Yellow", selectforeground="black")
-e2 = tkinter.Entry(window, width=31, font=font1, borderwidth=1, relief="solid",textvariable=FileNameStr, selectbackground="Yellow", selectforeground="black")
+e1 = tkinter.Entry(window, width=31, font=font4, borderwidth=1, relief="solid",textvariable=Clientstr, selectbackground="Yellow", selectforeground="black")
+e2 = tkinter.Entry(window, width=31, font=font4, borderwidth=1, relief="solid",textvariable=FileNameStr, selectbackground="Yellow", selectforeground="black")
 
 # Combobox and Client Name list
-d1 = ttk.Combobox(window, width=30, font=font1, textvariable=Clientstr)
+d1 = ttk.Combobox(window, width=30, font=font4, textvariable=Clientstr)
 window.option_add("*TCombobox*Listbox*Font", font2)
 refreshClients()
 
 # Radio Buttons and Action Buttons
-c1 = tkinter.Radiobutton(window, text="Ariel360", variable=CheckVar1, value=1, font=font2)
-c2 = tkinter.Radiobutton(window, text="ArielDB", variable=CheckVar1, value=2, font=font2)
+c1 = tkinter.Radiobutton(window, text="Ariel360", variable=CheckVar1, value=1, font=font3)
+c2 = tkinter.Radiobutton(window, text="ArielDB", variable=CheckVar1, value=2, font=font3)
 b1 = tkinter.Button(window, text="SUBMIT", command=submitFunction, font=font1)
-b1.config(width=20, height=2)
+b1.config(width=15, height=1)
 b2 = tkinter.Button(window, text="AUTOMATE", command=AutomateFunction, font=font1)
-b2.config(width=20, height=2)
+b2.config(width=15, height=1)
 b3 = tkinter.Button(window, text="ADD", command=AddFunction, font=font1)
-b3.config(width=20, height=2)
+b3.config(width=15, height=1)
 b4 = tkinter.Button(window, text="DELETE", command=delFunction, font=font1)
-b4.config(width=20, height=2)
+b4.config(width=15, height=1)
 b5 = tkinter.Button(window, text="DOWNLOAD", command=downloadFunction, font=font1)
-b5.config(width=20, height=2)
+b5.config(width=15, height=1)
 
 # Menubar Options Help
+font5 = ('Times',12,'bold')
 menubar = tkinter.Menu()
 window.config(menu=menubar)
 options_menu = tkinter.Menu(menubar)
@@ -460,14 +470,14 @@ help_menu = tkinter.Menu(menubar)
 menubar.add_cascade(menu=options_menu, label="Options")
 menubar.add_cascade(menu=help_menu, label="Help")
 
-options_menu.add_command(label="New", command=lambda: New())
-options_menu.add_command(label="Location", command=lambda:location())
-options_menu.add_command(label="Automate", command=lambda: auto_mate())
-options_menu.add_command(label="Download", command=lambda: download())
-options_menu.add_command(label="Add Client", command=lambda:addClient())
-options_menu.add_command(label="Delete Client", command=lambda:delClient())
-options_menu.add_command(label="Exit", command=lambda:quit_app())
-help_menu.add_command(label="About", command=lambda:show_about_info())
+options_menu.add_command(label="New",font=font5, command=lambda: New())
+options_menu.add_command(label="Location",font=font5, command=lambda:location())
+options_menu.add_command(label="Automate",font=font5, command=lambda: auto_mate())
+options_menu.add_command(label="Download",font=font5, command=lambda: download())
+options_menu.add_command(label="Add Client",font=font5, command=lambda:addClient())
+options_menu.add_command(label="Delete Client",font=font5, command=lambda:delClient())
+options_menu.add_command(label="Exit",font=font5, command=lambda:quit_app())
+help_menu.add_command(label="About",font=font5, command=lambda:show_about_info())
 
 # Right Click Menu
 m = tkinter.Menu(window, tearoff=0)
@@ -483,7 +493,7 @@ window.bind("<Button-3>", do_popup)
 
 # Grid Function
 def gridFunction():
-    l4.grid(sticky=tkinter.NW, row=0, column=0, padx=10, pady=12, ipadx=2, ipady=2)
+    logo.grid(sticky=tkinter.NW, row=0, column=0, padx=10, pady=10, ipadx=2, ipady=2)
     l2.grid(row=1, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
     d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
     l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
@@ -492,7 +502,6 @@ def gridFunction():
     c2.grid(row=3, column=2, ipadx=2, ipady=2, rowspan=1, columnspan=2)
     b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
     status_bar.grid(row=45, column=1, columnspan=2, sticky="ew",padx=10, pady=20)
-    l1.grid(sticky=tkinter.SE, row=100, column=500, padx=10, pady=3, ipadx=2, ipady=2)
 
 
 gridFunction()
