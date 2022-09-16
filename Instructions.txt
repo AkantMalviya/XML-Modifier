@@ -1,12 +1,57 @@
-Don't delete any supporting folders
-------------------------------------------------------------
-Otherwise you have to reinstall the software
-------------------------------------------------------------
-Don't add unusual client and their envelopes
-------------------------------------------------------------
-If you've added by mistake you can delete from envelopes folder
-------------------------------------------------------------
-Please move your test cases from xmls after work
-------------------------------------------------------------
-Location Folder xmls  should be clean after work
-------------------------------------------------------------
+
+                                                                  Things to keep in mind
+
+1. Don't delete any supporting folders
+-------------------------------------------------------------------------------------------------
+Otherwise you have to reinstall the software (delete TCD folder and unzip it again)
+-------------------------------------------------------------------------------------------------
+2. Don't add unusual client and their envelopes
+-------------------------------------------------------------------------------------------------
+3. If you've added by mistake you can delete it from envelopes folder
+-------------------------------------------------------------------------------------------------
+4. Please move or delete all your test cases from the xmls folder after work
+-------------------------------------------------------------------------------------------------
+5. Location Folder <xmls> should be clean after work
+-------------------------------------------------------------------------------------------------
+
+
+                                                                             How to use
+
+Software Options
+-------------------------------------------------------------------------------------------------
+* Envelope addition
+	I. Open location, paste your test case file.
+	II. Select the client, paste the test case file name, select libray.
+	III. Click on Envelope Button.
+-------------------------------------------------------------------------------------------------
+* Location - to open xmls folder on explorer.
+-------------------------------------------------------------------------------------------------
+* Automate Envelope addition  
+	I. Open location, paste all of your test case file.
+	II. Select the client & libray.
+	III. Click on automate.
+It will add envelope in 1000's of xml, in a sec.
+-------------------------------------------------------------------------------------------------
+* Download test case
+	I. Open download from options, paste test case file name.
+	II. Select the client & libray.
+	III. Click on download.
+
+FYI - currently we have download links of Ariel360 only.
+--------------------------------------------------------------------------------------------------
+* Add Client  
+	I. Open add from options, Enter Client Name.
+	II. Enter Envelope Header, and select library.
+	III. Click on Add.
+--------------------------------------------------------------------------------------------------
+* Delete Client
+	I. Open delete, select client from list.
+	II. Click on Delete.
+--------------------------------------------------------------------------------------------------
+* EXIT - to close the tool
+--------------------------------------------------------------------------------------------------
+* Help - Rest Informations are available in Help section
+--------------------------------------------------------------------------------------------------
+
+Thanks
+Akant

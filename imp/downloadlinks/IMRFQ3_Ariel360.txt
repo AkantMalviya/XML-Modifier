@@ -1,0 +1,1 @@
+http://cmtl-dbq3fe01:22838/api/schema/DocumentDataString?casenumber=CAS-07285-R7G1&lcid=1033

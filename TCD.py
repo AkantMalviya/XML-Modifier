@@ -99,6 +99,15 @@ def refreshClients():
     d1['values'] = clients
 
 
+def change_color(x):
+    if x == 1:
+        status_bar.config(bg="green2")
+    elif x == 2:
+        status_bar.config(bg="red2")
+    else:
+        status_bar.config(bg="gray95")
+
+
 def envelope():
     global envelope_headpath, envelope_footpath
     envelope_headpath = os.path.join(os.getcwd(), 'envelopes', f'{Clientstr.get().upper()}_{library[CheckVar1.get()-1]}_Header.txt')
@@ -123,26 +132,34 @@ def submitFunction():
 
             with open(file_path, "r") as f2:
                 content = f2.read()
-
-            if header not in content:
-                content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
+            checker = '<DocumentData>\n<DocumentProperties>\n<Language>\n<LCID>1033</LCID>\n</Language>\n<Template>'
+            print(content.find(checker))
+            if content.find(checker) == -1:
+                content = content.replace('<?xml version="1.0" encoding="utf-8"?>', "")
                 xml_data = header + content + footer
                 with open(file_path, "w") as f:
                     f.write(xml_data)
+                status_var.set(f"<Envelope has added in {FileNameStr.get()} For {Clientstr.get()}>")
+                change_color(1)
 
-            status_var.set(f"<{FileNameStr.get()} Has Been Downloaded For {Clientstr.get()}>")
+            else:
+                status_var.set(f"<{FileNameStr.get()} already have envelope for {Clientstr.get()}>")
+                change_color(2)
+
             FileNameStr.set("")
             Clientstr.set("")
             CheckVar1.set(0)
 
         except (FileNotFoundError, UnboundLocalError, IOError):
             status_var.set("<File Not Found At Location!>")
+            change_color(2)
 
     else:
         FileNameStr.set("")
         Clientstr.set("")
         CheckVar1.set(0)
         status_var.set(f"<Please Enter A Valid FileName Or ClientName & Select Anyone Library>")
+        change_color(0)
 
 
 def AutomateFunction():
@@ -150,6 +167,7 @@ def AutomateFunction():
     if Clientstr.get() != "" and Clientstr.get() in clients and CheckVar1.get() != 0:
         try:
             status_var.set("Please wait!, Test cases are downloading...")
+            change_color(0)
             envelope()
             folder = os.path.join(os.getcwd(), 'xmls')
             list1 = []
@@ -164,9 +182,9 @@ def AutomateFunction():
                     header = f.read()
                     footer = f1.read()
                     content = f2.read()
-
-                if header not in content:
-                    content = content.removeprefix('<?xml version="1.0" encoding="utf-8"?>')
+                checker = '<DocumentData>\n<DocumentProperties>\n<Language>\n<LCID>1033</LCID>\n</Language>\n<Template>'
+                if content.find(checker) == -1:
+                    content = content.replace('<?xml version="1.0" encoding="utf-8"?>',"")
                     xml_data = header + content + footer
                     with open(file_path, "w") as f:
                         f.write(xml_data)
@@ -175,26 +193,31 @@ def AutomateFunction():
 
             list1.clear()
             status_var.set("Envelope added successfully in all the test cases")
+            change_color(1)
             b2.grid_remove()
             if b1.winfo_ismapped()==0:
                 b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
             menubar.entryconfig("Options", state="normal")
+            messagebox.showinfo(title="Task Completed", message="Envelope Added Successfully")
 
         except(FileNotFoundError, IOError, UnboundLocalError):
             list1.clear()
             menubar.entryconfig("Options", state="normal")
             status_var.set("Please Select Client & Library, Then Press Automate!")
+            change_color(0)
 
     else:
         Clientstr.set("")
         CheckVar1.set(0)
         status_var.set("Please Select Client & Library, Then Press Automate!")
+        change_color(0)
 
 
 def AddFunction():
     newclient = Clientstr.get().upper().replace(" ", "")
     if Clientstr.get() == "" or FileNameStr.get() == "":
         status_var.set(f"<Please Type Client Name and Envelope>")
+        change_color(0)
 
     elif Clientstr.get() != "" and FileNameStr.get() != "" and CheckVar1.get() != 0:
         if newclient not in clients:
@@ -202,17 +225,20 @@ def AddFunction():
                 f.write(f'{newclient}\n')
             refreshClients()
             status_var.set(f"<New Client Added Successfully>")
+            change_color(1)
         else:
             status_var.set(f"<Client Already Exist>")
+            change_color(2)
 
         file_path = os.path.join(os.getcwd(), 'envelopes', f'{newclient}_{library[CheckVar1.get()-1]}_Header.txt')
         if not os.path.exists(file_path):
             with open(file_path, "w") as f:
                 f.write(FileNameStr.get())
             status_var.set(f"<New Client Added Successfully>")
+            change_color(1)
         else:
             status_var.set(f"<{newclient}_{library[CheckVar1.get()-1]} Already Exist!, Select Another Library>")
-
+            change_color(2)
         FileNameStr.set("")
         Clientstr.set("")
         CheckVar1.set(0)
@@ -229,6 +255,7 @@ def AddFunction():
 
     else:
         status_var.set(f"<Please select any library>")
+        change_color(0)
 
 
 def delFunction():
@@ -240,6 +267,7 @@ def delFunction():
             f.write(new)
         refreshClients()
         status_var.set("Client deleted successfully!")
+        change_color(1)
         FileNameStr.set("")
         Clientstr.set("")
         CheckVar1.set(0)
@@ -254,6 +282,7 @@ def delFunction():
             b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
     else:
         status_var.set("<Client not found!>")
+        change_color(2)
 
 
 def downloadFunction():
@@ -271,6 +300,7 @@ def downloadFunction():
                 with open(folderpath, "wb") as f:
                     f.write(myfile.content)
                 status_var.set(f"<{FileNameStr.get()} has been downloaded for {Clientstr.get().upper()}_{library[CheckVar1.get() - 1]}>")
+                change_color(1)
                 FileNameStr.set("")
                 Clientstr.set("")
                 CheckVar1.set(0)
@@ -279,18 +309,23 @@ def downloadFunction():
                     b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
             except FileNotFoundError:
                 status_var.set(f"<{Clientstr.get().upper()}_{library[CheckVar1.get() - 1]} Download link is not available>")
+                change_color(2)
             except(IOError, UnboundLocalError):
                 status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
+                change_color(0)
             except requests.exceptions.MissingSchema:
                 status_var.set(f"Test case not found on the portal!")
+                change_color(2)
         else:
             status_var.set(f"{FileNameStr.get().upper()} is already exist, click on Options/Location")
+            change_color(2)
 
     else:
         FileNameStr.set("")
         Clientstr.set("")
         CheckVar1.set(0)
         status_var.set(f"<Please Enter a valid FileName Or ClientName & Select anyone library>")
+        change_color(0)
 
 
 def New():
@@ -317,6 +352,7 @@ def New():
         l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
 
     status_var.set("Welcome to test case downloader!")
+    change_color(0)
 
 
 def auto_mate():
@@ -339,6 +375,7 @@ def auto_mate():
         l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
 
     status_var.set("Please Select Client & Library, Then Press Automate!")
+    change_color(0)
 
 
 def addClient():
@@ -364,7 +401,8 @@ def addClient():
     if b3.winfo_ismapped() == 0:
         b3.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
 
-    status_var.set("Please Select Client, Library and Paste Envelope, then press ADD!")
+    status_var.set("Please Type Client, Paste Envelope, Select Library, then press ADD!")
+    change_color(0)
 
 
 def delClient():
@@ -391,6 +429,7 @@ def delClient():
         b4.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
 
     status_var.set("Please Select Client, Then Press Delete!")
+    change_color(0)
 
 
 def download():
@@ -414,6 +453,7 @@ def download():
         b5.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
 
     status_var.set("Welcome to test case downloader!")
+    change_color(0)
 
 
 # Status Bar
@@ -449,7 +489,7 @@ refreshClients()
 # Radio Buttons and Action Buttons
 c1 = tkinter.Radiobutton(window, text="Ariel360", variable=CheckVar1, value=1, font=font3)
 c2 = tkinter.Radiobutton(window, text="ArielDB", variable=CheckVar1, value=2, font=font3)
-b1 = tkinter.Button(window, text="SUBMIT", command=submitFunction, font=font1)
+b1 = tkinter.Button(window, text="ENVELOPE", command=submitFunction, font=font1)
 b1.config(width=15, height=1)
 b2 = tkinter.Button(window, text="AUTOMATE", command=AutomateFunction, font=font1)
 b2.config(width=15, height=1)
