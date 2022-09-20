@@ -32,6 +32,31 @@ envelope_footpath = ""
 selected = False
 
 
+def callback(addclient_str):
+    if e2["state"] == "disabled":
+        e2["state"] = "normal"
+    if c1["state"] == "disabled":
+        c1["state"] = "normal"
+    if c2["state"] == "disabled":
+        c2["state"] = "normal"
+    newclient = addclient_str.get().upper().strip()
+    flag1 = False
+    flag2 = False
+    file1 = os.path.join(os.getcwd(), 'envelopes', f'{newclient}_{library[0]}_Header.txt')
+    file2 = os.path.join(os.getcwd(), 'envelopes', f'{newclient}_{library[1]}_Header.txt')
+    if os.path.exists(file1):
+        flag1 = True
+        if c1["state"] == "normal" or c1["state"] == "active":
+            c1["state"] = "disabled"
+    if os.path.exists(file2):
+        flag2 = True
+        if c2["state"] == "normal" or c2["state"] == "active":
+            c2["state"] = "disabled"
+    if flag1 and flag2:
+        if e2["state"] == "normal" or e2["state"] == "active":
+            e2["state"] = "disabled"
+
+
 def location():
     folderpath = os.path.join(os.getcwd(), 'xmls')
     os.startfile(folderpath)
@@ -104,6 +129,8 @@ def change_color(x):
         status_bar.config(bg="green2")
     elif x == 2:
         status_bar.config(bg="red2")
+    elif x == 3:
+        status_bar.config(bg="yellow")
     else:
         status_bar.config(bg="gray95")
 
@@ -214,12 +241,8 @@ def AutomateFunction():
 
 
 def AddFunction():
-    newclient = Clientstr.get().upper().replace(" ", "")
-    if Clientstr.get() == "" or FileNameStr.get() == "":
-        status_var.set(f"<Please Type Client Name and Envelope>")
-        change_color(0)
-
-    elif Clientstr.get() != "" and FileNameStr.get() != "" and CheckVar1.get() != 0:
+    newclient = addclientstr.get().upper().strip()
+    if newclient != "" and FileNameStr.get() != "" and CheckVar1.get() != 0:
         if newclient not in clients:
             with open(client_path, 'a') as f:
                 f.write(f'{newclient}\n')
@@ -236,25 +259,69 @@ def AddFunction():
                 f.write(FileNameStr.get())
             status_var.set(f"<New Client Added Successfully>")
             change_color(1)
+            b3.grid_remove()
+            e1.grid_remove()
+            l5.grid_remove()
+            if b1.winfo_ismapped() == 0:
+                b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+            if d1.winfo_ismapped() == 0:
+                d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
+            if l3.winfo_ismapped() == 0:
+                l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+            menubar.entryconfig("Options", state="normal")
         else:
             status_var.set(f"<{newclient}_{library[CheckVar1.get()-1]} Already Exist!, Select Another Library>")
             change_color(2)
         FileNameStr.set("")
+        addclientstr.set("")
         Clientstr.set("")
         CheckVar1.set(0)
-        b3.grid_remove()
-        e1.grid_remove()
-        l5.grid_remove()
-        if b1.winfo_ismapped() == 0:
-            b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
-        if d1.winfo_ismapped() == 0:
-            d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
-        if l3.winfo_ismapped() == 0:
-            l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
-        menubar.entryconfig("Options", state="normal")
+        if e2["state"] == "disabled":
+            e2["state"] = "normal"
+        if c1["state"] == "disabled":
+            c1["state"] = "normal"
+        if c2["state"] == "disabled":
+            c2["state"] = "normal"
+
+    elif newclient != "" and e2["state"] == "disabled":
+        if newclient not in clients:
+            with open(client_path, 'a') as f:
+                f.write(f'{newclient}\n')
+            refreshClients()
+            status_var.set(f"<New Client Added Successfully>")
+            change_color(1)
+            b3.grid_remove()
+            e1.grid_remove()
+            l5.grid_remove()
+            if b1.winfo_ismapped() == 0:
+                b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
+            if d1.winfo_ismapped() == 0:
+                d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
+            if l3.winfo_ismapped() == 0:
+                l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+            menubar.entryconfig("Options", state="normal")
+        else:
+            status_var.set(f"<Client Already Exist>")
+            change_color(2)
+        FileNameStr.set("")
+        addclientstr.set("")
+        Clientstr.set("")
+        CheckVar1.set(0)
+        if e2["state"] == "disabled":
+            e2["state"] = "normal"
+        if c1["state"] == "disabled":
+            c1["state"] = "normal"
+        if c2["state"] == "disabled":
+            c2["state"] = "normal"
 
     else:
-        status_var.set(f"<Please select any library>")
+        status_var.set(f"<Please Type Client Name, Envelope & Select any library>")
+        if e2["state"] == "disabled":
+            e2["state"] = "normal"
+        if c1["state"] == "disabled":
+            c1["state"] = "normal"
+        if c2["state"] == "disabled":
+            c2["state"] = "normal"
         change_color(0)
 
 
@@ -296,6 +363,8 @@ def downloadFunction():
                     client_link = f.read()
                 testcase = client_link[client_link.find("=") + 1:client_link.find("&")]
                 filename = FileNameStr.get().upper().replace(" ","")
+                status_var.set(f"<Please Wait, Test Case Is Downloading...>")
+                change_color(1)
                 myfile = requests.get(client_link.replace(testcase, filename))
                 with open(folderpath, "wb") as f:
                     f.write(myfile.content)
@@ -331,6 +400,7 @@ def downloadFunction():
 def New():
     FileNameStr.set("")
     Clientstr.set("")
+    addclientstr.set("")
     CheckVar1.set(0)
     l5.grid_remove()
     e1.grid_remove()
@@ -380,6 +450,7 @@ def auto_mate():
 
 def addClient():
     FileNameStr.set("")
+    addclientstr.set("")
     Clientstr.set("")
     CheckVar1.set(0)
     d1.grid_remove()
@@ -436,6 +507,7 @@ def download():
     FileNameStr.set("")
     Clientstr.set("")
     CheckVar1.set(0)
+    e1.grid_remove()
     b1.grid_remove()
     b2.grid_remove()
     b3.grid_remove()
@@ -465,6 +537,8 @@ status_bar = tkinter.Label(window, textvariable=status_var, anchor=tkinter.N, fo
 Clientstr = tkinter.StringVar()
 FileNameStr = tkinter.StringVar()
 CheckVar1 = tkinter.IntVar()
+addclientstr = tkinter.StringVar()
+addclientstr.trace("w", lambda name, index,mode, addclientstr=addclientstr: callback(addclientstr))
 client_path = os.path.join(os.getcwd(), 'imp', 'Clients.txt')
 library = ['Ariel360', 'ArielDB']
 brand = copyryt + 'AkantMalviya'
@@ -478,7 +552,7 @@ l1 = tkinter.Label(window, text=brand, background='white')
 l2 = tkinter.Label(window, text="CLIENT NAME:", font=font1, borderwidth=1, relief="solid")
 l3 = tkinter.Label(window, text="TEST FILE NAME:", font=font1, borderwidth=1, relief="solid")
 l5 = tkinter.Label(window, text="ENVELOPE HEADER:", font=font1, borderwidth=1, relief="solid")
-e1 = tkinter.Entry(window, width=31, font=font4, borderwidth=1, relief="solid",textvariable=Clientstr, selectbackground="Yellow", selectforeground="black")
+e1 = tkinter.Entry(window, width=31, font=font4, borderwidth=1, relief="solid",textvariable=addclientstr, selectbackground="Yellow", selectforeground="black")
 e2 = tkinter.Entry(window, width=31, font=font4, borderwidth=1, relief="solid",textvariable=FileNameStr, selectbackground="Yellow", selectforeground="black")
 
 # Combobox and Client Name list
