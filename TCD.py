@@ -131,6 +131,7 @@ def change_color(x):
         status_bar.config(bg="red2")
     elif x == 3:
         status_bar.config(bg="yellow")
+        status_var.set(f"<Please Wait, Test Case Is Downloading...>")
     else:
         status_bar.config(bg="gray95")
 
@@ -357,14 +358,13 @@ def downloadFunction():
     if Clientstr.get() != "" and Clientstr.get() in clients and FileNameStr.get() != "" and CheckVar1.get() == 1:
         folderpath = os.path.join(os.getcwd(), 'xmls', f'{FileNameStr.get().upper()}.xml')
         if not os.path.exists(folderpath):
+            change_color(3)
             try:
                 clientlink()
                 with open(client_link, 'r') as f:
                     client_link = f.read()
                 testcase = client_link[client_link.find("=") + 1:client_link.find("&")]
                 filename = FileNameStr.get().upper().replace(" ","")
-                status_var.set(f"<Please Wait, Test Case Is Downloading...>")
-                change_color(1)
                 myfile = requests.get(client_link.replace(testcase, filename))
                 with open(folderpath, "wb") as f:
                     f.write(myfile.content)
