@@ -1,0 +1,21 @@
+<ArrayOfEmployeeBasicInformation>
+  <EmployeeBasicInformation>
+    <EmployeeNumber>00001055982</EmployeeNumber>
+    <PaymentMethod>DD</PaymentMethod>
+    <FinancialInstitutionName>Test bank name ADO-4098461</FinancialInstitutionName>
+    <AccountNumber>9876</AccountNumber>
+    <MultipleEFT>Yes</MultipleEFT>
+    <ForeignBank>No</ForeignBank>
+    <DeductionCodes>
+      <string>03372HI</string>
+      <string>LSFT-RMD</string>
+    </DeductionCodes>
+    <DeductionTypes>
+      <string>FD</string>
+      <string>HI</string>
+    </DeductionTypes>
+    <VoluntaryDeductions>No</VoluntaryDeductions>
+    <TaxRelatedDeductions>Yes</TaxRelatedDeductions>
+    <OtherDeductions>No</OtherDeductions>
+  </EmployeeBasicInformation>
+</ArrayOfEmployeeBasicInformation>

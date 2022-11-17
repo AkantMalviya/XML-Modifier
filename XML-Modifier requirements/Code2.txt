@@ -1,0 +1,47 @@
+import os
+
+Client_name = "IMRF_Q3"
+Employee_ID = "90000364326"
+
+try:
+    dbpath = os.path.join(os.getcwd(),"Resources",f"{Client_name}.txt")
+    with open(dbpath) as f:
+            dbfilepath = f.read()
+
+    i = 0;
+    txtfiles = dict()
+    while(i<len(Employee_ID)-1):
+        i+=1
+        dbfilepath = dbfilepath + "\\" + Employee_ID[0:i]
+
+    for dbfilename in os.listdir(dbfilepath):
+        if dbfilename.endswith("INF.txt"):
+            with open(os.path.join(dbfilepath,dbfilename)) as f:
+                if Employee_ID in f.read():
+                    txtfiles[dbfilename] = float(os.path.getctime(os.path.join(dbfilepath,dbfilename)))
+
+
+    dbfilename = max(txtfiles,key = txtfiles.get)
+
+    # CRM TEST CASE ID
+    with open(os.path.join(dbfilepath, dbfilename)) as f:
+        datalist = f.read().split(",")
+
+    CaseID = [i for i in datalist if "RequestCode=" in i]
+    CaseID = CaseID[0].replace("RequestCode=","")
+    CaseID = CaseID.replace('"',"")
+    CaseID = CaseID.replace("'","")
+    CaseID = CaseID.replace(" ","")
+
+    # ArielDB XML
+    dbfilename = dbfilename.replace("INF.txt", "STM.xml")
+    with open(os.path.join(dbfilepath, dbfilename),"r") as f:
+        ArielDBxml = f.read()
+        ArielDBxml = ArielDBxml.replace('<?xml version="1.0" encoding="utf-8"?>',"")
+        ArielDBxml = "<ArielDB>"+ ArielDBxml +"</ArielDB>"
+
+    with open(os.path.join(os.getcwd(), "xmls", "multisource" ,f"{Employee_ID}STM.xml"),"w") as f:
+        f.write(ArielDBxml)
+ 
+except FileNotFoundError:
+    print("Enter valid client and Employee_ID")

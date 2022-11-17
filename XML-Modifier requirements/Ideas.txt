@@ -1,0 +1,2 @@
+when downloading of Ariel payroll by default add Ariel payroll tags in that file, same do for Ariel 360 and same for Ariel DB if you can otherwise pick it from location and then create a multisource using this three 
+

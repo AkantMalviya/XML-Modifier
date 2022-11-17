@@ -1,0 +1,22 @@
+<ArielPayroll><ArrayOfEmployeeBasicInformation>
+  <EmployeeBasicInformation>
+    <EmployeeNumber>90000364323PR</EmployeeNumber>
+    <PayeeType>PAR</PayeeType>
+    <ProfileType>REG - Participant</ProfileType>
+    <RelatedMemberID>90000364323</RelatedMemberID>
+    <PensionPlan>REG</PensionPlan>
+    <PaymentMethod>CHQ</PaymentMethod>
+    <MultipleEFT>No</MultipleEFT>
+    <ForeignBank>No</ForeignBank>
+    <DeductionCodes>
+      <string>ERI-REG</string>
+    </DeductionCodes>
+    <DeductionTypes>
+      <string>ERI</string>
+    </DeductionTypes>
+    <VoluntaryDeductions>No</VoluntaryDeductions>
+    <TaxRelatedDeductions>No</TaxRelatedDeductions>
+    <OtherDeductions>No</OtherDeductions>
+  </EmployeeBasicInformation>
+</ArrayOfEmployeeBasicInformation>
+</ArielPayroll>

@@ -1,0 +1,23 @@
+import os
+import subprocess
+
+Employee_id = input("Enter Employee Id: ").upper()
+Client_name = input("Enter Client Name: ").upper()
+try:
+    scriptpath = os.path.join(os.getcwd(),"Resources",f"{Client_name}_ArielPayroll.ps1")
+    with open(scriptpath,"r") as f:
+        commands = f.read()
+
+    commands = commands.replace("00000000000",Employee_ID)
+    result = subprocess.run(["powershell", "-command",commands], capture_output=True)
+    payrolldata = result.stdout
+    payrollxml = "<ArielPayroll>" + payrolldata.decode() + "</ArielPayroll>"
+    payrollxmlpath = os.path.join(os.getcwd(),f"{Employee_ID}.xml")
+    if Employee_ID in payrollxml:
+        with open(payrollxmlpath,"w") as f:
+            f.write(payrollxml)
+    else:
+        print("Employee ID not available in ArielPayroll Portal")
+
+except FileNotFoundError:
+       print("Please Enter a Valid Client")
