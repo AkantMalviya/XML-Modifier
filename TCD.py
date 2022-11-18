@@ -420,6 +420,7 @@ def multisourceFunction():
                         result = subprocess.run(["powershell", "-command", commands], capture_output=True)
                         payrolldata = result.stdout
                         payrollxml = "<ArielPayroll>" + payrolldata.decode() + "</ArielPayroll>"
+                        payrollxml = payrollxml.replace("\n", "")
                         payrollxmlpath = os.path.join(os.getcwd(),"xmls","multisource", f"{Employee_ID}PR.xml")
                         if Employee_ID in payrollxml:
                             with open(payrollxmlpath, "w") as f:
@@ -439,8 +440,7 @@ def multisourceFunction():
                         dbpath = os.path.join(os.getcwd(), "imp", "downloadlinks", f"{Client_name}_ArielDB.txt")
                         with open(dbpath) as f:
                             dbfilepath = f.read()
-
-                        i = 0;
+                        i = 0
                         txtfiles = dict()
                         while i < len(Employee_ID) - 1:
                             i += 1
@@ -459,12 +459,11 @@ def multisourceFunction():
                         status_var.set(f"<Please enter a valid client & employee id>")
                         change_color(1)
 
-                if CheckVar4 == 1:
+                if CheckVar4.get() == 1:
                     # CRM TEST CASE ID Or Fetch Data for Ariel360 Case
                     try:
                         with open(os.path.join(dbfilepath, dbfilename)) as f:
                             datalist = f.read().split(",")
-
                         CaseID = [i for i in datalist if "RequestCode=" in i]
                         CaseID = CaseID[0].replace("RequestCode=", "")
                         CaseID = CaseID.replace('"', "")
@@ -474,12 +473,18 @@ def multisourceFunction():
                         with open(client_link, 'r') as f:
                             client_link = f.read()
                         testcase = client_link[client_link.find("=") + 1:client_link.find("&")]
-                        CRMfile = requests.get(client_link.replace(testcase, CaseID))
-                        CRMfile = "<Ariel360>" + CRMfile.content.decode() + "</Ariel360>"
-                        CRMfile = CRMfile.replace('<?xml version="1.0" encoding="utf-8"?>', "")
+                        client_link = client_link.replace(testcase, CaseID)
+                        CRMfile = requests.get(client_link)
                         CRMfolderpath = os.path.join(os.getcwd(), "xmls", "multisource", f"{CaseID}.xml")
-                        with open(CRMfolderpath, "w") as f:
-                            f.write(CRMfile)
+                        with open(CRMfolderpath, "wb") as f:
+                            f.write(CRMfile.content)
+
+                        with open(CRMfolderpath, "r") as f:
+                            CRMfileContent = f.read()
+                        CRMfileContent = "<Ariel360>" + CRMfileContent + "</Ariel360>"
+                        CRMfileContent = CRMfileContent.replace('<?xml version="1.0" encoding="utf-8"?>', "")
+                        with open(CRMfolderpath,"w") as f:
+                            f.write(CRMfileContent)
                             success_count += 1
                         status_var.set(f"<{CaseID} has been downloaded for {Client_name}>")
                         change_color(1)
@@ -516,7 +521,7 @@ def multisourceFunction():
                     with open(envelope_headpath, "r") as f, open(envelope_footpath, "r") as f1:
                         header = f.read()
                         footer = f1.read()
-                    multisourceXML = header + payrollxml + CRMfile + ArielDBxml + footer
+                    multisourceXML = header + payrollxml + CRMfileContent + ArielDBxml + footer
                     with open(os.path.join(os.getcwd(), "xmls", "multisource", f"{Employee_ID}Multisource.xml"), "w") as f:
                         f.write(multisourceXML)
                     messagebox.showinfo(title="Task completed", message="Test case downloaded successfully")

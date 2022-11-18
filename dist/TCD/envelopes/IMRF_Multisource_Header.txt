@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DocumentData>
+<DocumentProperties>
+<Language>
+<LCID>1033</LCID>
+</Language>
+<Template>
+<Library>ArielDB</Library>
+<Group>IMRF</Group>
+<Name>1033_IMRF_FinalRet_Master</Name>
+<StyleName></StyleName>
+<PortalServiceURI>http://cmtl-dbv1q3xda1.msoext.com/odata4/v16</PortalServiceURI>
+</Template>
+</DocumentProperties>
+<Systems>

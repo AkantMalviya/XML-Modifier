@@ -1,0 +1,1 @@
+http://VMAZB09DBFE1:22838/api/schema/DocumentDataString?casenumber=CAS-12012-Y7J9&set language=lcid=1033
