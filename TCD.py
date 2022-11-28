@@ -18,7 +18,7 @@ font3 = ('Times', 15, 'bold')
 window = tkinter.Tk()
 window.title("TEST CASE DOWNLOADER")
 window.configure(background="#fff")
-window.geometry("1050x390")
+window.geometry("1000x390")
 window.option_add("*tearOff", False)
 window.resizable(False, False)
 photo = tkinter.PhotoImage(file='images/xml.png')
@@ -402,13 +402,14 @@ def downloadFunction():
 def multisourceFunction():
     global envelope_headpath, envelope_footpath, client_link
     success_count = 0
-    if Clientstr.get() != "" and Clientstr.get() in clients and FileNameStr.get() != "":
+    if Clientstr.get() != "" and Clientstr.get() in clients and FileNameStr.get() != "" and CaseIDStr.get() != "":
         if CheckVar3.get() == 1 or CheckVar4.get() == 1 or CheckVar5.get() == 1:
             if len(FileNameStr.get())==11 and FileNameStr.get().isdigit():
                 status_var.set(f"<Please wait, Multisource XML is downloading...>")
                 change_color(3)
-                Employee_ID = FileNameStr.get().upper()
+                Employee_ID = FileNameStr.get().upper().replace(" ","")
                 Client_name = Clientstr.get().upper()
+                CaseID = CaseIDStr.get().upper().replace(" ","")
                 # Fetching Ariel Payroll XML
                 if CheckVar3.get() == 1:
                     try:
@@ -441,7 +442,7 @@ def multisourceFunction():
                         with open(dbpath) as f:
                             dbfilepath = f.read()
                         i = 0
-                        txtfiles = dict()
+                        inffile = ""
                         while i < len(Employee_ID) - 1:
                             i += 1
                             dbfilepath = dbfilepath + "\\" + Employee_ID[0:i]
@@ -449,11 +450,11 @@ def multisourceFunction():
                         for dbfilename in os.listdir(dbfilepath):
                             if dbfilename.endswith("INF.txt"):
                                 with open(os.path.join(dbfilepath, dbfilename)) as f:
-                                    if Employee_ID in f.read():
-                                        txtfiles[dbfilename] = float(
-                                            os.path.getctime(os.path.join(dbfilepath, dbfilename)))
+                                    infcontent = f.read()
+                                    if Employee_ID in infcontent and CaseID in infcontent:
+                                        inffile = dbfilename
 
-                        dbfilename = max(txtfiles, key=txtfiles.get)
+                        dbfilename = inffile
 
                     except(IOError, UnboundLocalError, FileNotFoundError):
                         status_var.set(f"<Please enter a valid client & employee id>")
@@ -462,13 +463,6 @@ def multisourceFunction():
                 if CheckVar4.get() == 1:
                     # CRM TEST CASE ID Or Fetch Data for Ariel360 Case
                     try:
-                        with open(os.path.join(dbfilepath, dbfilename)) as f:
-                            datalist = f.read().split(",")
-                        CaseID = [i for i in datalist if "RequestCode=" in i]
-                        CaseID = CaseID[0].replace("RequestCode=", "")
-                        CaseID = CaseID.replace('"', "")
-                        CaseID = CaseID.replace("'", "")
-                        CaseID = CaseID.replace(" ", "")
                         client_link = os.path.join(os.getcwd(), 'imp', 'downloadlinks', f'{Client_name}_Ariel360.txt')
                         with open(client_link, 'r') as f:
                             client_link = f.read()
@@ -529,42 +523,37 @@ def multisourceFunction():
                     change_color(1)
                 else:
                     messagebox.showwarning(title="Warning!", message="Something went wrong, please check location!")
-                    status_var.set(f"<Please provide valid Employee ID>")
+                    status_var.set(f"<Please provide valid Employee ID & CASE ID>")
                     change_color(0)
 
             else:
                 FileNameStr.set("")
                 Clientstr.set("")
+                CaseIDStr.set("")
                 CheckVar3.set(1)
                 CheckVar4.set(1)
                 CheckVar5.set(1)
-                status_var.set(f"<Please provide valid Employee ID>")
+                status_var.set(f"<Please provide valid Employee ID & CASE ID>")
                 change_color(0)
 
         else:
             FileNameStr.set("")
             Clientstr.set("")
+            CaseIDStr.set("")
             CheckVar3.set(1)
             CheckVar4.set(1)
             CheckVar5.set(1)
             status_var.set(f"<Please Select Any Libraries>")
             change_color(0)
-    elif FileNameStr.get() == "":
-        FileNameStr.set("")
-        Clientstr.set("")
-        CheckVar3.set(1)
-        CheckVar4.set(1)
-        CheckVar5.set(1)
-        status_var.set(f"<Please provide Employee ID>")
-        change_color(0)
 
     else:
         FileNameStr.set("")
         Clientstr.set("")
+        CaseIDStr.set("")
         CheckVar3.set(1)
         CheckVar4.set(1)
         CheckVar5.set(1)
-        status_var.set(f"<Please Select Any Client>")
+        status_var.set(f"<Please Select Any Client & provide Employee ID & Case ID>")
         change_color(0)
 
 
@@ -584,6 +573,9 @@ def New():
     c4.grid_remove()
     c5.grid_remove()
     l4.grid_remove()
+    l6.grid_remove()
+    e3.grid_remove()
+    e2.config(width=31)
     if e2["state"] == "disabled":
         e2["state"] = "normal"
     if c1["state"] == "disabled":
@@ -622,6 +614,9 @@ def auto_mate():
     c4.grid_remove()
     c5.grid_remove()
     l4.grid_remove()
+    l6.grid_remove()
+    e3.grid_remove()
+    e2.config(width=31)
     if e2["state"] == "normal" or e2["state"] == "active":
         e2["state"] = "disabled"
     if e2.winfo_ismapped() == 0:
@@ -657,6 +652,9 @@ def addClient():
     c4.grid_remove()
     c5.grid_remove()
     l4.grid_remove()
+    l6.grid_remove()
+    e3.grid_remove()
+    e2.config(width=31)
     if e2["state"] == "disabled":
         e2["state"] = "normal"
     if c1["state"] == "disabled":
@@ -695,6 +693,9 @@ def delClient():
     c4.grid_remove()
     c5.grid_remove()
     l4.grid_remove()
+    l6.grid_remove()
+    e3.grid_remove()
+    e2.config(width=31)
     if e2.winfo_ismapped() == 0:
         e2.grid(row=2, column=2, padx=10, pady=10, ipadx=2, ipady=2)
     if e2["state"] == "normal" or e2["state"] == "active":
@@ -733,6 +734,9 @@ def download():
     c4.grid_remove()
     c5.grid_remove()
     l4.grid_remove()
+    l6.grid_remove()
+    e3.grid_remove()
+    e2.config(width=31)
     if e2["state"] == "disabled":
         e2["state"] = "normal"
     if c1["state"] == "disabled":
@@ -759,6 +763,7 @@ def download():
 def multisource():
     FileNameStr.set("")
     Clientstr.set("")
+    CaseIDStr.set("")
     CheckVar1.set(0)
     CheckVar3.set(1)
     CheckVar4.set(1)
@@ -773,12 +778,19 @@ def multisource():
     l3.grid_remove()
     l5.grid_remove()
     e1.grid_remove()
+    e2.config(width=13)
+    if e2.winfo_ismapped() != 0:
+        e2.grid(row=2, column=2, padx=10, pady=10, ipadx=2, ipady=2, sticky=tkinter.W)
     if e2["state"] == "disabled":
         e2["state"] = "normal"
     if l4.winfo_ismapped() == 0:
         l4.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
+    if l6.winfo_ismapped() == 0:
+        l6.grid(row=2, column=3, padx=10, pady=10, ipadx=2, ipady=2)
     if e2.winfo_ismapped() == 0:
-        e2.grid(row=2, column=2, padx=10, pady=10, ipadx=2, ipady=2)
+        e2.grid(row=2, column=2, padx=10, pady=10, ipadx=2, ipady=2, sticky=tkinter.W)
+    if e3.winfo_ismapped() == 0:
+        e3.grid(row=2, column=4, padx=10, pady=10, ipadx=2, ipady=2)
     if d1.winfo_ismapped() == 0:
         d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
     if b6.winfo_ismapped() == 0:
@@ -810,6 +822,7 @@ status_bar = tkinter.Label(window, textvariable=status_var, anchor=tkinter.N, fo
 # variables
 Clientstr = tkinter.StringVar()
 FileNameStr = tkinter.StringVar()
+CaseIDStr = tkinter.StringVar()
 CheckVar1 = tkinter.IntVar()
 addclientstr = tkinter.StringVar()
 addclientstr.trace("w", lambda name, index,mode, addclientstr=addclientstr: callback(addclientstr))
@@ -827,9 +840,10 @@ l2 = tkinter.Label(window, text="CLIENT NAME :", font=font1, borderwidth=0, reli
 l3 = tkinter.Label(window, text="TEST CASE NAME :", font=font1, borderwidth=0, relief="solid")
 l4 = tkinter.Label(window, text="EMPLOYEE ID :", font=font1, borderwidth=0, relief="solid")
 l5 = tkinter.Label(window, text="ENVELOPE HEADER :", font=font1, borderwidth=0, relief="solid")
+l6 = tkinter.Label(window, text="CASE ID :", font=font1, borderwidth=0, relief="solid")
 e1 = tkinter.Entry(window, width=31, font=font4, borderwidth=1, relief="solid",textvariable=addclientstr, selectbackground="Yellow", selectforeground="black")
 e2 = tkinter.Entry(window, width=31, font=font4, borderwidth=1, relief="solid",textvariable=FileNameStr, selectbackground="Yellow", selectforeground="black")
-
+e3 = tkinter.Entry(window, width=16, font= font4, borderwidth=1, relief="solid",textvariable=CaseIDStr, selectbackground="Yellow", selectforeground="black")
 # Combobox and Client Name list
 d1 = ttk.Combobox(window, width=30, font=font4, textvariable=Clientstr)
 window.option_add("*TCombobox*Listbox*Font", font2)
@@ -888,13 +902,13 @@ window.bind("<Button-3>", do_popup)
 def gridFunction():
     logo.grid(sticky=tkinter.NW, row=0, column=0, padx=10, pady=10, ipadx=2, ipady=2)
     l2.grid(row=1, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
-    d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2)
+    d1.grid(row=1, column=2, padx=10, pady=10, ipadx=2, ipady=2, columnspan=3, sticky=tkinter.W)
     l3.grid(row=2, column=1, sticky=tkinter.W, padx=10, pady=10, ipadx=2, ipady=2)
     e2.grid(row=2, column=2, padx=10, pady=10, ipadx=2, ipady=2)
     c1.grid(row=3, column=1, ipadx=2, ipady=2, rowspan=1, columnspan=2)
     c2.grid(row=3, column=2, ipadx=2, ipady=2, rowspan=1, columnspan=2)
     b1.grid(row=4, column=1, padx=10, pady=10, rowspan=3, columnspan=3)
-    status_bar.grid(row=45, column=1, columnspan=2, sticky="ew",padx=10, pady=20)
+    status_bar.grid(row=45, column=1, columnspan=3, sticky="ew",padx=10, pady=20)
 
 
 gridFunction()
